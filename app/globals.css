@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+/*
+  Design tokens. The interface uses a NEUTRAL mid-dark grey on purpose:
+  photo-editing tools (and ISO 3664 viewing guidance) use a neutral surround
+  so the eye judges image brightness and colour without bias.
+*/
+@theme {
+  --color-surround: #262626;
+  --color-panel: #303030;
+  --color-rule: #444444;
+  --color-ink: #ececec;
+  --color-muted: #a8a8a8;
+  --color-amber: #f2b544;
+  --color-correct: #7cc69a;
+  --color-over: #f07e61;
+  --color-under: #7fb2f0;
+
+  --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow Semi Condensed", "Barlow", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-surround);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 2px;
+}
+
+/* Range input styled like the notched scale of a command dial */
+.dial {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 28px;
+  background: repeating-linear-gradient(
+      90deg,
+      var(--color-rule) 0 1px,
+      transparent 1px var(--tick, 12px)
+    )
+    center / 100% 10px no-repeat;
+  cursor: pointer;
+}
+.dial::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 4px;
+  height: 26px;
+  border-radius: 2px;
+  background: var(--color-amber);
+}
+.dial::-moz-range-thumb {
+  width: 4px;
+  height: 26px;
+  border: 0;
+  border-radius: 2px;
+  background: var(--color-amber);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
