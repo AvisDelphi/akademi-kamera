@@ -50,7 +50,7 @@ Pendukung lain:
 1. Pengguna mengunggah foto (JPG, PNG, WEBP, HEIC, TIFF, maks. 25 MB).
 2. Sistem membaca metadata EXIF: aperture, shutter, ISO, focal length (termasuk setara 35 mm), kamera, lensa, flash, white balance, mode exposure, mode metering, kompensasi exposure.
 3. Sistem mengukur piksel foto: histogram, persentase shadow/highlight terpotong, skor ketajaman, dan warna dominan.
-4. Sistem pakar berbasis aturan (13 aturan) menghasilkan saran beserta nilai setelan baru, contoh: *"Shutter 1/30 pada 85 mm berisiko goyang. Coba 1/100 dan naikkan ISO ke 640."*
+4. Sistem pakar berbasis aturan (14 aturan) menghasilkan saran beserta nilai setelan baru, contoh: *"Shutter 1/30 pada 85 mm berisiko goyang. Coba 1/100 dan naikkan ISO ke 640."*
 5. Tabel "Mengapa saran ini muncul" menampilkan status tiap aturan: terpicu, tidak terpicu, atau dilewati karena data tidak tersedia.
 
 Penanganan EXIF yang hilang:
