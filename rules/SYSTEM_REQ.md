@@ -83,7 +83,7 @@ Sprint goal: siswa dapat mengikuti kursus terstruktur dari awal sampai kuis.
 | FR-18 | Siswa | Sistem menampilkan detail kursus (modul dan materi) dan memungkinkan siswa mendaftar ke kursus | M | Selesai |
 | FR-19 | Siswa | Sistem menampilkan materi berformat Markdown, beserta tautan ke latihan simulator yang terkait | M | Selesai |
 | FR-20 | Siswa | Sistem memungkinkan siswa menandai materi selesai dan menampilkan persentase progres kursus | M | Selesai |
-| FR-21 | Siswa | Sistem menyediakan kuis pilihan ganda, menghitung nilai, menentukan lulus/tidak berdasarkan nilai minimum, dan menampilkan pembahasan | M | Selesai (penilaian masih di sisi klien, lihat FR-24) |
+| FR-21 | Siswa | Sistem menyediakan kuis pilihan ganda, menghitung nilai, menentukan lulus/tidak berdasarkan nilai minimum, dan menampilkan pembahasan | M | Selesai (pembahasan berupa jawaban yang benar; belum ada teks penjelasan per soal) |
 | FR-22 | Siswa | Sistem menyimpan dan menampilkan riwayat nilai kuis | S | Selesai |
 | FR-23 | Siswa | Sistem menampilkan dasbor siswa: kursus diikuti, progres, dan aktivitas terakhir | M | Selesai |
 
@@ -97,7 +97,7 @@ Sprint goal: nilai kuis tidak dapat dimanipulasi, dan admin dapat mengelola pera
 
 | ID | Aktor | Kebutuhan | Prioritas | Status |
 |---|---|---|---|---|
-| FR-24 | Sistem | Sistem menilai jawaban kuis di server dan baru menampilkan kunci jawaban serta pembahasan setelah kuis dikumpulkan | M | Direncanakan |
+| FR-24 | Sistem | Sistem menilai jawaban kuis di server dan baru menampilkan kunci jawaban serta pembahasan setelah kuis dikumpulkan | M | Selesai (diuji di Postgres lokal dan Supabase tiruan; belum di Supabase sungguhan) |
 | FR-25 | Admin | Sistem menampilkan daftar pengguna beserta perannya, dengan pencarian berdasarkan nama atau email | M | Direncanakan |
 | FR-26 | Admin | Sistem memungkinkan admin mengubah peran pengguna (siswa, instruktur, admin) | M | Direncanakan |
 | FR-27 | Sistem | Sistem menampilkan menu sesuai peran dan menampilkan pesan "akses ditolak" jika pengguna membuka halaman di luar perannya | M | Direncanakan |

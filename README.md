@@ -142,7 +142,7 @@ Langkah ini dibutuhkan agar halaman login, kursus, kuis, dan dasbor aktif.
 
 > Jika basis data sudah dibuat sebelum halaman LMS ada, jalankan sekali `supabase/migrations/20261109000000_lms_profiles.sql` agar nama instruktur dapat ditampilkan di katalog.
 >
-> Jika basis data dibuat sebelum 12 November 2026, jalankan juga `supabase/migrations/20261112000000_fix_quiz_rls.sql` dan `supabase/migrations/20261112000100_restrict_lesson_progress.sql` (perbaikan hak akses soal kuis dan progres materi). Keduanya aman dijalankan ulang. Untuk halaman admin, jalankan juga `supabase/migrations/20261112000200_profiles_email.sql` (kolom email di profil dan batasan kolom yang boleh diubah).
+> Jika basis data dibuat sebelum 12 November 2026, jalankan juga `supabase/migrations/20261112000000_fix_quiz_rls.sql` dan `supabase/migrations/20261112000100_restrict_lesson_progress.sql` (perbaikan hak akses soal kuis dan progres materi). Keduanya aman dijalankan ulang. Untuk penilaian kuis di server, jalankan `supabase/migrations/20261112000300_grade_quizzes_on_server.sql` (setelah `...000250_fix_quiz_rls_performance.sql`). Untuk halaman admin, jalankan juga `supabase/migrations/20261112000200_profiles_email.sql` (kolom email di profil dan batasan kolom yang boleh diubah). Jalankan juga `supabase/migrations/20261112000250_fix_quiz_rls_performance.sql`: ini memperbaiki kebijakan soal/opsi kuis dari perbaikan G5 yang membuat pembacaan kuis sangat lambat pada database tanpa statistik tabel.
 
 Setelah pengguna login, `lib/progress.js` otomatis menyimpan hasil ke tabel `exercise_attempts` dan `photo_analyses`. Jika belum login, data tetap disimpan di browser.
 
@@ -318,7 +318,7 @@ Simulator adalah alat bantu belajar, bukan simulasi optik penuh. Penyederhanaan 
 Batasan LMS pada prototype ini:
 
 - Konten kursus diisi lewat SQL (`supabase/lms-seed.sql`) atau SQL Editor; belum ada editor kursus di UI.
-- Nilai kuis dihitung di browser karena opsi benar masih dapat dibaca klien. Untuk produksi, penilaian dipindahkan ke fungsi sisi server.
+- Nilai kuis dihitung di basis data (`submit_quiz_attempt`), dan kolom `is_correct` tidak bisa dibaca siswa. Pembahasan berupa jawaban yang benar; belum ada teks penjelasan per soal.
 - Dasbor instruktur dan rekap nilai per kelas belum tersedia.
 - Markdown materi mendukung subset terbatas: judul, daftar, kutipan, kode, tebal, miring, dan tautan.
 
@@ -331,7 +331,6 @@ Batasan LMS pada prototype ini:
 - Header keamanan HTTP diatur di `next.config.js` (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`).
 - Hak akses data diatur oleh Row Level Security di PostgreSQL, bukan hanya di tampilan.
 - Versi dependensi dipatok tepat; `postcss` dipaksa ke versi yang sudah menambal celah keamanan (`overrides` di `package.json`).
-- Catatan: pada skema saat ini siswa masih bisa membaca kolom `is_correct` di `quiz_options`. Untuk versi produksi, penilaian kuis sebaiknya dipindahkan ke fungsi sisi server.
 
 ## Rencana pengembangan
 
@@ -346,7 +345,7 @@ Prioritas berikutnya:
 
 1. Dasbor instruktur untuk melihat progres siswa dan hasil latihan.
 2. Penyuntingan kursus, modul, materi, dan kuis dari UI instruktur.
-3. Penilaian kuis di fungsi server-side dan penyembunyian kolom `is_correct`.
+3. Teks pembahasan per soal pada kuis (kolom penjelasan di `quiz_questions`).
 
 Pengembangan lanjutan (dapat dimasukkan ke saran BAB V):
 

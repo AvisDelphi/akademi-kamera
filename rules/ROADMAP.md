@@ -160,12 +160,12 @@ Tujuan: menutup celah kunci jawaban dan memberi peran admin antarmukanya.
 
 **Penilaian kuis di server (G4)**
 
-- [ ] Buat fungsi Postgres `public.submit_quiz_attempt(p_quiz_id bigint, p_answers jsonb)` dengan `security definer`: menilai jawaban di server, menyimpan ke `quiz_attempts`, dan mengembalikan skor beserta status lulus.
-- [ ] Hapus kebijakan `own quiz attempts insert` agar siswa tidak bisa menyisipkan nilai langsung.
-- [ ] Sembunyikan kolom `is_correct` dari peran `anon` dan `authenticated` dengan *column privileges* (`revoke select` tabel, lalu `grant select (id, question_id, label)`).
-- [ ] Sediakan fungsi `get_quiz_answer_key(p_quiz_id)` (`security definer`, hanya untuk pemilik kursus/admin) untuk editor kuis di Sprint 6, karena instruktur juga memakai peran `authenticated`.
-- [ ] Ubah `lib/lms.js` (`getQuiz`, `saveQuizAttempt`) dan `components/lms/QuizRunner.js` agar memanggil `supabase.rpc(...)`. Pembahasan jawaban benar ditampilkan dari hasil fungsi, setelah kuis dikumpulkan.
-- [ ] Pertahankan `lib/quiz.js` sebagai logika acuan dan tetap diuji; samakan logikanya dengan fungsi SQL.
+- [x] Buat fungsi Postgres `public.submit_quiz_attempt(p_quiz_id bigint, p_answers jsonb)` dengan `security definer`: menilai jawaban di server, menyimpan ke `quiz_attempts`, dan mengembalikan skor beserta status lulus.
+- [x] Hapus kebijakan `own quiz attempts insert` agar siswa tidak bisa menyisipkan nilai langsung.
+- [x] Sembunyikan kolom `is_correct` dari peran `anon` dan `authenticated` dengan *column privileges* (`revoke select` tabel, lalu `grant select (id, question_id, label)`).
+- [x] Sediakan fungsi `get_quiz_answer_key(p_quiz_id)` (`security definer`, hanya untuk pemilik kursus/admin) untuk editor kuis di Sprint 6, karena instruktur juga memakai peran `authenticated`.
+- [x] Ubah `lib/lms.js` (`getQuiz`, kini `submitQuizAttempt`) dan `components/lms/QuizRunner.js` agar memanggil `supabase.rpc(...)`. Pembahasan jawaban benar ditampilkan dari hasil fungsi, setelah kuis dikumpulkan.
+- [x] Pertahankan `lib/quiz.js` sebagai logika acuan dan tetap diuji; samakan logikanya dengan fungsi SQL.
 
 > **Alasan untuk sidang:** browser memegang *anon key* publik, jadi apa pun yang bisa dibaca klien dianggap bisa dibaca siswa. Penilaian yang adil harus terjadi di tempat yang tidak bisa dimanipulasi siswa, yaitu basis data.
 
@@ -176,7 +176,7 @@ Tujuan: menutup celah kunci jawaban dan memberi peran admin antarmukanya.
 - [x] Email pengguna tidak tersedia di `profiles` (migrasi `20261112000200_profiles_email.sql`: kolom `email`, backfill, trigger, dan batasan kolom yang boleh diubah). Pilihan paling sederhana: tambahkan kolom `email` yang diisi oleh trigger `handle_new_user` (migrasi baru) agar admin bisa mengenali akun.
 - [x] Tautan "Admin" di `components/SiteHeader.js` (menu akun) hanya untuk peran admin; sidebar punya bagian ADMIN yang juga hanya untuk admin.
 
-> Status 12 November 2026: panel admin selesai dan diuji dengan Supabase tiruan serta Postgres lokal untuk migrasinya; belum diuji di Supabase sungguhan. Penilaian kuis di server (G4) belum dikerjakan.
+> Status 12 November 2026: panel admin dan penilaian kuis di server (G4) selesai. Migrasi diuji di Postgres 16 lokal dan UI dengan Supabase tiruan; belum diuji di Supabase sungguhan. Editor kuis instruktur kini membaca kunci lewat `get_quiz_answer_key`.
 
 **Definition of Done:** siswa tidak bisa membaca `is_correct` lewat konsol browser, nilai hanya tercatat lewat RPC, admin dapat menaikkan siswa menjadi instruktur dari UI.
 
@@ -191,7 +191,7 @@ Tujuan: peran instruktur bisa mengelola konten dan memantau siswa. Ini sprint te
 - [x] Daftar kursus milik instruktur + tombol "Buat kursus" (`app/(staff)/instruktur/kursus/page.js`; `/instruktur` kini berisi Ringkasan).
 - [x] `app/(staff)/instruktur/kursus/[courseId]/page.js` → ubah judul, deskripsi, level, status publikasi; daftar modul.
 - [x] Tambah/ubah/hapus modul dan materi (judul, `position`, `content_md` dengan pratinjau, pilihan `simulator_exercise_id` dari `lib/exercises.js`).
-- [x] Pembuat kuis: judul, `pass_score`, soal, opsi, tandai jawaban benar. Untuk sementara memakai baca langsung `quiz_options.is_correct` (RLS mengizinkan); ganti ke `get_quiz_answer_key` setelah Sprint 5.
+- [x] Pembuat kuis: judul, `pass_score`, soal, opsi, tandai jawaban benar. Kunci jawaban dibaca lewat `get_quiz_answer_key`.
 - [x] Fungsi data baru di `lib/instructor.js` agar komponen tetap tidak memanggil Supabase langsung, konsisten dengan pola `lib/lms.js`.
 
 **Dasbor instruktur (G2)**
