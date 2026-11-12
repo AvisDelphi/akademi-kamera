@@ -202,16 +202,34 @@ create policy "owner writes quizzes" on public.quizzes for all
 create policy "read questions" on public.quiz_questions for select
   using (exists (select 1 from public.quizzes q where q.id = quiz_id));
 create policy "owner writes questions" on public.quiz_questions for all
-  using (public.my_role() in ('instructor', 'admin'))
-  with check (public.my_role() in ('instructor', 'admin'));
+  using (exists (select 1 from public.quizzes q
+                 join public.lessons l on l.id = q.lesson_id
+                 join public.modules m on m.id = l.module_id
+                 join public.courses c on c.id = m.course_id
+                 where q.id = quiz_id and (c.instructor_id = auth.uid() or public.my_role() = 'admin')))
+  with check (exists (select 1 from public.quizzes q
+                 join public.lessons l on l.id = q.lesson_id
+                 join public.modules m on m.id = l.module_id
+                 join public.courses c on c.id = m.course_id
+                 where q.id = quiz_id and (c.instructor_id = auth.uid() or public.my_role() = 'admin')));
 
 -- NOTE: students can read options, including is_correct. For the prototype that is
 -- acceptable; for production, grade quizzes in a server-side function instead.
 create policy "read options" on public.quiz_options for select
   using (exists (select 1 from public.quiz_questions qq where qq.id = question_id));
 create policy "owner writes options" on public.quiz_options for all
-  using (public.my_role() in ('instructor', 'admin'))
-  with check (public.my_role() in ('instructor', 'admin'));
+  using (exists (select 1 from public.quiz_questions qq
+                 join public.quizzes q on q.id = qq.quiz_id
+                 join public.lessons l on l.id = q.lesson_id
+                 join public.modules m on m.id = l.module_id
+                 join public.courses c on c.id = m.course_id
+                 where qq.id = question_id and (c.instructor_id = auth.uid() or public.my_role() = 'admin')))
+  with check (exists (select 1 from public.quiz_questions qq
+                 join public.quizzes q on q.id = qq.quiz_id
+                 join public.lessons l on l.id = q.lesson_id
+                 join public.modules m on m.id = l.module_id
+                 join public.courses c on c.id = m.course_id
+                 where qq.id = question_id and (c.instructor_id = auth.uid() or public.my_role() = 'admin')));
 
 -- Student activity: students read/write only their own rows; instructors and admins can read all.
 create policy "own enrollments" on public.enrollments for all

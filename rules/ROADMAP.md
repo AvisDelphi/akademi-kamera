@@ -143,7 +143,7 @@ Estimasi memakai asumsi ±8 jam kerja efektif per hari.
 
 Tujuan: fondasi aman dan bisa didemokan sebelum menambah fitur.
 
-- [ ] **G5** Perbaiki kebijakan RLS `owner writes questions` dan `owner writes options` agar memeriksa kepemilikan kursus lewat rantai `quiz → lesson → module → course`, sama seperti kebijakan `owner writes quizzes`.
+- [x] **G5** Perbaiki kebijakan RLS `owner writes questions` dan `owner writes options` agar memeriksa kepemilikan kursus lewat rantai `quiz → lesson → module → course`, sama seperti kebijakan `owner writes quizzes`.
   - File: `supabase/migrations/20261112000000_fix_quiz_rls.sql` (baru), dan sinkronkan ke `supabase/schema.sql`.
 - [ ] **G7** Batasi `insert` pada `lesson_progress` hanya untuk materi dari kursus yang `is_published`.
 - [x] **G9** Ubah "13 aturan" menjadi "14 aturan" di README.
