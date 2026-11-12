@@ -39,3 +39,26 @@ test("Pass threshold is inclusive", () => {
 test("serializeAnswers produces string keys and numeric values", () => {
   assert.deepEqual(serializeAnswers({ 10: "2" }), { "10": 2 });
 });
+
+test("An option of another question never counts, even if it is the correct one there", () => {
+  const result = gradeQuiz(questions, { 10: 3, 11: 2 });
+  assert.equal(result.score, 0);
+});
+
+test("With several correct options, choosing any of them is correct (same rule as the SQL function)", () => {
+  const multi = [{ id: 20, options: [{ id: 5, is_correct: true }, { id: 6, is_correct: true }, { id: 7, is_correct: false }] }];
+  assert.equal(gradeQuiz(multi, { 20: 6 }).score, 100);
+  assert.equal(gradeQuiz(multi, { 20: 7 }).score, 0);
+});
+
+test("Score rounds half up like round(100 * correct / total) in the database", () => {
+  const three = [1, 2, 3].map((id) => ({ id, options: [{ id: id * 10, is_correct: true }] }));
+  assert.equal(gradeQuiz(three, { 1: 10 }).score, 33);
+  assert.equal(gradeQuiz(three, { 1: 10, 2: 20 }).score, 67);
+  const eight = Array.from({ length: 8 }, (_, i) => ({ id: i + 1, options: [{ id: (i + 1) * 10, is_correct: true }] }));
+  assert.equal(gradeQuiz(eight, { 1: 10 }).score, 13); // 12.5 rounds up
+});
+
+test("A quiz without questions scores 0", () => {
+  assert.equal(gradeQuiz([], {}).score, 0);
+});

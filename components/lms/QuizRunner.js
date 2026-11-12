@@ -4,8 +4,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth";
-import { flattenLessons, getCourseOutline, getQuiz, getQuizAttempts, saveQuizAttempt } from "@/lib/lms";
-import { gradeQuiz, isQuizPassed, serializeAnswers } from "@/lib/quiz";
+import { flattenLessons, getCourseOutline, getQuiz, getQuizAttempts, submitQuizAttempt } from "@/lib/lms";
+import { serializeAnswers } from "@/lib/quiz";
 import { ArrowRightIcon, CheckIcon, XIcon } from "@/components/icons";
 import {
   Banner,
@@ -33,7 +33,7 @@ export default function QuizRunner({ courseId, quizId }) {
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  const [saveError, setSaveError] = useState(null);
+  const [submitError, setSubmitError] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
   const [outline, setOutline] = useState([]);
   const toast = useToast();
@@ -69,20 +69,25 @@ export default function QuizRunner({ courseId, quizId }) {
   const total = quiz?.questions.length ?? 0;
   const bestScore = attempts.length > 0 ? Math.max(...attempts.map((row) => row.score)) : null;
 
+  // The answers are graded in the database; the browser never sees the answer key beforehand.
   async function handleSubmit(event) {
     event.preventDefault();
     if (!quiz) return;
-    setSaveError(null);
-    const graded = gradeQuiz(quiz.questions, answers);
-    setResult(graded);
-    if (!user) return;
+    setSubmitError(null);
     setSubmitting(true);
     try {
-      await saveQuizAttempt(user.id, quiz.id, graded.score, serializeAnswers(answers));
-      setAttempts(await getQuizAttempts(user.id, quiz.id));
-      if (isQuizPassed(graded.score, quiz.pass_score)) toast.show("Kuis lulus 🎉");
+      const graded = await submitQuizAttempt(quiz.id, serializeAnswers(answers));
+      setResult(graded);
+      if (graded.passed) toast.show("Kuis lulus 🎉");
+      if (user && graded.attempt_id) {
+        try {
+          setAttempts(await getQuizAttempts(user.id, quiz.id));
+        } catch {
+          // Riwayat gagal dimuat ulang; nilai sudah tersimpan dan tampil di hasil.
+        }
+      }
     } catch (err) {
-      setSaveError(err.message);
+      setSubmitError(err.message);
     } finally {
       setSubmitting(false);
     }
@@ -91,7 +96,7 @@ export default function QuizRunner({ courseId, quizId }) {
   function retry() {
     setAnswers({});
     setResult(null);
-    setSaveError(null);
+    setSubmitError(null);
   }
 
   if (!enabled) {
@@ -122,7 +127,8 @@ export default function QuizRunner({ courseId, quizId }) {
 
   const lesson = quiz.lessons ?? null;
   const course = lesson?.modules?.courses ?? null;
-  const passed = result ? isQuizPassed(result.score, quiz.pass_score) : false;
+  const passed = Boolean(result?.passed);
+  const optionLabel = (question, optionId) => question?.options.find((option) => Number(option.id) === Number(optionId))?.label;
   const allLessons = flattenLessons(outline);
   const lessonIndex = lesson ? allLessons.findIndex((row) => Number(row.id) === Number(lesson.id)) : -1;
   const nextLesson = lessonIndex >= 0 ? allLessons[lessonIndex + 1] ?? null : null;
@@ -215,31 +221,42 @@ export default function QuizRunner({ courseId, quizId }) {
               </div>
 
               <ul className="mt-6 divide-y divide-tinta-100 border-t border-tinta-100">
-                {result.perQuestion.map((row, index) => {
-                  const question = quiz.questions.find((item) => item.id === row.questionId);
+                {result.results.map((row, index) => {
+                  const question = quiz.questions.find((item) => Number(item.id) === Number(row.question_id));
+                  const correctLabels = (row.correct_option_ids ?? []).map((id) => optionLabel(question, id)).filter(Boolean);
                   return (
-                    <li key={row.questionId} className="flex items-start gap-3 py-3 text-sm">
+                    <li key={row.question_id} className="flex items-start gap-3 py-3 text-sm">
                       <span
                         className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-full ${
-                          row.isCorrect ? "bg-sprout-100 text-sprout-800" : "bg-warn-bg text-warn-fg"
+                          row.is_correct ? "bg-sprout-100 text-sprout-800" : "bg-warn-bg text-warn-fg"
                         }`}
                       >
-                        {row.isCorrect ? <CheckIcon size={12} /> : <XIcon size={12} />}
+                        {row.is_correct ? <CheckIcon size={12} /> : <XIcon size={12} />}
                       </span>
                       <span>
                         <span className="font-semibold">
-                          Soal {index + 1}: {row.isCorrect ? "benar" : "salah"}
+                          Soal {index + 1}: {row.is_correct ? "benar" : "salah"}
                         </span>
                         {question ? <span className="text-tinta-500"> — {question.prompt}</span> : null}
+                        {!row.is_correct && correctLabels.length > 0 && (
+                          <span className="mt-1 block text-tinta-700">
+                            Jawaban benar: <span className="font-semibold">{correctLabels.join(" / ")}</span>
+                            {row.chosen_option_id ? (
+                              <span className="text-tinta-500"> · jawabanmu: {optionLabel(question, row.chosen_option_id)}</span>
+                            ) : (
+                              <span className="text-tinta-500"> · belum dijawab</span>
+                            )}
+                          </span>
+                        )}
                       </span>
                     </li>
                   );
                 })}
               </ul>
 
-              {saveError && (
-                <p className="mt-4 text-sm font-medium text-danger-fg" role="alert">
-                  Nilai gagal disimpan: {saveError}
+              {user && !result.attempt_id && (
+                <p className="mt-4 text-xs font-medium text-tinta-500">
+                  Sebagai pemilik kursus, percobaan pratinjau ini tidak disimpan ke riwayat siswa.
                 </p>
               )}
 
@@ -301,6 +318,12 @@ export default function QuizRunner({ courseId, quizId }) {
               </li>
             ))}
           </ol>
+
+          {submitError && (
+            <Banner tone="danger" role="alert">
+              Jawabanmu belum bisa dinilai: {submitError}
+            </Banner>
+          )}
 
           {!result && (
             <div className="flex flex-wrap items-center gap-4">
