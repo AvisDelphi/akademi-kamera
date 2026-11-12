@@ -1,6 +1,16 @@
-# CLAUDE.md
+# AI Rules — Akademi Kamera
 
-Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+Behavioral guidelines to reduce common LLM coding mistakes when working on Akademi Kamera.
+
+## 0. Project Context
+
+- **Product:** Akademi Kamera, a photography LMS for learning the exposure triangle (aperture, shutter speed, ISO). Final project for S1 Sistem Informasi, UPN "Veteran" Jakarta.
+- **Stack:** Next.js 15 (App Router), React 19, Tailwind CSS 4, plain JavaScript (ES Modules), Supabase (PostgreSQL + Auth + RLS), exifr.
+- **Language:** all user-facing text is Indonesian; follow `rules/UIUX_GUIDELINE.md` §19.
+- **Design:** follow `rules/UIUX_GUIDELINE.md`. Its visual style is borrowed from Learnify; its product scope is Akademi Kamera only. Do not add Learnify features (XP, leaderboard, mentoring, Career Center) unless asked.
+- **Git:** follow `rules/GIT_RULES.md`.
+- **Verify:** run `npm test` and `npm run build` before declaring work done.
+- **Privacy:** uploaded photos stay in the browser; never send photo files or GPS data to the server.
 
 **Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 

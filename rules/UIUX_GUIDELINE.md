@@ -1,9 +1,9 @@
-# Learnify — Kaidah Desain UI/UX
+# Akademi Kamera — Kaidah Desain UI/UX
 
-**Versi:** 1.0 · **Tema:** Ink & Sprout (aksen hijau)
-**Cakupan:** fondasi visual, komponen, struktur halaman (Dashboard, Profil, Pengaturan, dan seluruh area produk), serta alur pengguna end-to-end.
+**Versi:** 2.0 · **Tema:** Ink & Sprout (aksen hijau)
+**Cakupan:** fondasi visual, komponen, struktur halaman (Beranda, Kursus, Materi, Kuis, Simulator, Analisis Foto, Dasbor, Area Instruktur), serta alur pengguna end-to-end.
 
-Dokumen ini disusun dari hasil membaca seluruh halaman dan komponen pada project *virtual-internship* (produk bernama **Learnify**). Semua elemen yang sudah ada dipertahankan strukturnya, lalu dirapikan dan diselaraskan dengan palet warna baru.
+Gaya visual dokumen ini (palet Ink & Sprout, tipografi, radius, elevasi, pola komponen) **meniru gaya desain Learnify**. Isi produk, halaman, dan alurnya sepenuhnya milik **Akademi Kamera**: LMS fotografi untuk mempelajari segitiga exposure (aperture, shutter speed, ISO). Fitur Learnify seperti XP, leaderboard, mentoring, dan Career Center **tidak** termasuk produk ini.
 
 ---
 
@@ -17,76 +17,80 @@ Dokumen ini disusun dari hasil membaca seluruh halaman dan komponen pada project
 6. [Fondasi: Spacing, Grid, Radius, Elevasi](#6-fondasi-spacing-grid-radius-elevasi)
 7. [Fondasi: Ikon, Ilustrasi, Motion](#7-fondasi-ikon-ilustrasi-motion)
 8. [Komponen](#8-komponen)
-9. [App Shell (Navbar, Sidebar, Kerangka Halaman)](#9-app-shell)
-10. [Struktur Dashboard](#10-struktur-dashboard)
-11. [Struktur Profil](#11-struktur-profil)
-12. [Struktur Pengaturan (Settings)](#12-struktur-pengaturan-settings)
-13. [Halaman Produk Lainnya](#13-halaman-produk-lainnya)
-14. [Area Admin](#14-area-admin)
-15. [Alur End-to-End](#15-alur-end-to-end)
-16. [State: Loading, Kosong, Error, Sukses](#16-state-loading-kosong-error-sukses)
-17. [Aksesibilitas](#17-aksesibilitas)
-18. [Bahasa & Microcopy](#18-bahasa--microcopy)
-19. [Responsif](#19-responsif)
-20. [Checklist Review Desain](#20-checklist-review-desain)
+9. [App Shell](#9-app-shell)
+10. [Struktur Dasbor Siswa](#10-struktur-dasbor-siswa)
+11. [Halaman Belajar](#11-halaman-belajar)
+12. [Simulator Kamera](#12-simulator-kamera)
+13. [Analisis Foto](#13-analisis-foto)
+14. [Halaman Publik & Autentikasi](#14-halaman-publik--autentikasi)
+15. [Area Instruktur & Admin](#15-area-instruktur--admin)
+16. [Alur End-to-End](#16-alur-end-to-end)
+17. [State: Loading, Kosong, Error, Sukses](#17-state-loading-kosong-error-sukses)
+18. [Aksesibilitas](#18-aksesibilitas)
+19. [Bahasa & Microcopy](#19-bahasa--microcopy)
+20. [Responsif](#20-responsif)
+21. [Checklist Review Desain](#21-checklist-review-desain)
 
 ---
 
 ## 1. Ringkasan Produk & Peran Pengguna
 
-Learnify adalah platform *virtual internship* / bootcamp yang menggabungkan pembelajaran terstruktur, mentoring langsung, gamifikasi, dan persiapan karier.
+Akademi Kamera adalah LMS fotografi berbasis web. Siswa belajar teori lewat kursus, mempraktikkannya di kamera virtual, lalu menguji pemahaman dengan menganalisis foto mereka sendiri.
 
 | Peran | Tujuan utama | Area yang dipakai |
 |---|---|---|
-| **Pengunjung** | Mengenal program dan mendaftar | Beranda, Tentang, Katalog Bootcamp, Kebijakan Privasi, Masuk/Daftar |
-| **Peserta (Learner)** | Belajar, menjaga konsistensi, siap kerja | Dashboard, Kursus Saya, Materi, Misi & Lencana, Leaderboard, Level, Streak, Mentoring, Career Center, Profil, Pengaturan |
-| **Admin** | Mengelola konten dan peserta | Dashboard Admin: Ringkasan, Pengguna, Kursus, Sesi, Misi |
+| **Pengunjung** | Mencoba alat dan mengenal kursus | Beranda, Katalog Kursus, Simulator, Analisis Foto, Masuk/Daftar |
+| **Siswa** (`student`) | Memahami exposure dan bisa menerapkannya | Dasbor, Kursus, Materi, Kuis, Simulator, Analisis Foto |
+| **Instruktur** (`instructor`) | Menyusun kursus dan memantau siswa | Area Instruktur: Ringkasan, Kursus Saya (editor), Siswa & Nilai |
+| **Admin** (`admin`) | Mengelola pengguna dan seluruh konten | Area Admin: Pengguna & Peran, semua kursus |
+
+Simulator dan Analisis Foto **bisa dipakai tanpa akun**. Hasilnya disimpan di browser; setelah masuk, hasil berikutnya tersimpan ke akun.
 
 **Pilar pengalaman** yang harus terasa di setiap layar:
 
-1. **Belajar** — bootcamp, kurikulum per hari, materi video, catatan, transkrip, playground, tugas.
-2. **Konsistensi** — target mingguan, daily streak, misi harian/mingguan/spesial.
-3. **Kompetisi sehat** — XP, level/evolusi, leaderboard, lencana.
-4. **Karier** — CV Analyzer, Bot Interview, Final Project, rekomendasi pekerjaan, Talent License.
-5. **Bimbingan** — jadwal mentoring dan live mentoring.
+1. **Pahami** — materi singkat yang menjelaskan *mengapa*, bukan hanya *apa*.
+2. **Coba** — setiap konsep bisa langsung dicoba di simulator, dengan umpan balik instan.
+3. **Terapkan** — foto milik siswa sendiri dianalisis dan diberi saran setelan yang konkret.
+4. **Ukur** — kuis, kriteria lulus latihan, dan progres kursus menunjukkan sejauh mana siswa paham.
 
 ---
 
 ## 2. Prinsip Desain
 
 **1. Satu aksen, satu makna.**
-Hijau (`#B7D894`) adalah satu-satunya warna aksen merek. Hijau berarti *aksi utama, posisi aktif, dan progres*. Jangan gunakan hijau untuk dekorasi tanpa makna.
+Hijau (`#B7D894`) adalah satu-satunya warna aksen merek. Hijau berarti *aksi utama, posisi aktif, progres, dan exposure tepat*. Jangan gunakan hijau untuk dekorasi tanpa makna.
 
-**2. Tenang di dasar, hidup di progres.**
-Permukaan memakai netral hangat dan biru-tinta. Energi visual dipusatkan pada progress bar, XP, streak, dan pencapaian, karena di situlah motivasi pengguna tumbuh.
+**2. Foto dikelilingi warna netral.**
+Pratinjau simulator dan foto unggahan selalu berada di atas **bingkai abu-abu netral** (§4.4), bukan di atas Mint, Ink, atau latar hangat. Warna di sekitar foto memengaruhi cara mata menilai kecerahan dan warna (prinsip yang sama dipakai aplikasi penyunting foto dan panduan tampilan ISO 3664).
 
-**3. Selalu ada "langkah berikutnya".**
-Setiap layar menjawab: *apa yang harus saya lakukan sekarang?* Contoh: "Lanjutkan materi", "Ikut sesi", "Perbaiki CV".
+**3. Angka teknis selalu terbaca dan dijelaskan.**
+f/5.6, 1/250, ISO 400, dan EV tampil dengan angka tabular, tanpa disingkat berlebihan, dan setiap angka penting punya penjelasan dalam bahasa sehari-hari ("Terlalu gelap sekitar 1⅓ stop").
 
-**4. Rayakan, tapi jangan berisik.**
-Gamifikasi muncul pada momen yang tepat (selesai materi, naik level, target tercapai), bukan sebagai animasi yang terus berjalan.
+**4. Selalu ada "langkah berikutnya".**
+Setiap layar menjawab: *apa yang harus saya lakukan sekarang?* Contoh: "Lanjutkan materi", "Coba di simulator", "Kerjakan kuis", "Analisis foto lain".
 
-**5. Konsisten lebih penting daripada unik.**
+**5. Umpan balik instan, perayaan secukupnya.**
+Perubahan setelan kamera langsung terlihat di pratinjau. Pencapaian (latihan lulus, kuis lulus, kursus selesai) dirayakan sekali dengan toast atau banner, bukan animasi yang terus berjalan.
+
+**6. Konsisten lebih penting daripada unik.**
 Satu pola kartu, satu pola tombol, satu pola form, dipakai ulang di seluruh area.
 
 ---
 
 ## 3. Audit Singkat UI Saat Ini
 
-Temuan dari project yang perlu diluruskan oleh kaidah ini:
+Temuan dari kode saat ini (`app/globals.css`, `app/layout.js`, komponen di `components/`) yang perlu diselaraskan dengan kaidah ini:
 
 | Temuan | Dampak | Keputusan baru |
 |---|---|---|
-| Aksen bercampur: biru, indigo, ungu, oranye, amber, hijau dipakai bergantian per fitur | Identitas lemah, makna warna tidak jelas | Satu aksen hijau + netral tinta; warna status hanya untuk status |
-| Gradien ungu-biru animatif dan kartu Career Center gradien oranye | Bertabrakan dengan palet baru | Diganti kartu **Ink** (`#202734`) dengan aksen hijau |
-| 10+ variasi radius (dari 8px sampai 56px) | Tampilan kurang rapi | Skala radius 5 tingkat (lihat §6) |
-| Teks 9–11px sangat sering dipakai, banyak huruf kapital + tracking lebar | Sulit dibaca, terutama di mobile | Minimum 12px; label kapital hanya untuk *overline* |
-| Ketebalan huruf hampir selalu paling tebal (black) | Hierarki datar karena semua "berteriak" | Skala bobot 400/500/600/700 dengan peran jelas |
-| Ikon campuran emoji dan ikon garis | Gaya tidak seragam | Ikon garis 1 set; emoji hanya untuk konten perayaan |
-| Pengaturan tersebar: sebagian di "Edit Profil" (tab Dasar & Keamanan), sebagian di komponen terpisah (email, 2FA, sesi perangkat) | Pengguna sulit menemukan pengaturan | Halaman **Pengaturan** tersendiri dengan navigasi kiri (lihat §12) |
-| Notifikasi berupa dialog bawaan peramban ("Berhasil!") | Mengganggu, tidak sesuai merek | Komponen **Toast** |
-| Label "UI/UX Designer" di profil tertulis tetap | Informasi tidak akurat | Ambil dari jalur bootcamp yang diikuti |
-| Bahasa campur (Indonesia/Inggris) tanpa pola: "Daily Streak", "Top Players", "Evolution Path" | Nada tidak konsisten | Bahasa Indonesia sebagai utama; istilah Inggris hanya untuk nama fitur resmi (lihat §18) |
+| Seluruh aplikasi bertema gelap abu netral (`#262626`) dengan aksen amber (`#f2b544`) | Tidak sesuai gaya Ink & Sprout | Latar aplikasi terang (`#F6F8F3`) dengan aksen Sprout. Abu netral **hanya** dipakai sebagai bingkai foto (§4.4) |
+| Status exposure memakai biru (kurang), hijau (tepat), merah-oranye (berlebih) | Biru/oranye tidak ada di palet; status hanya dibedakan warna | Pola meter exposure §4.5: warna semantik + panah + teks |
+| Font Barlow / Barlow Semi Condensed | Berbeda dengan gaya acuan | Instrument Sans untuk seluruh UI (§5) |
+| Navigasi hanya berupa tautan teks di header; belum ada area instruktur | Instruktur belum punya tempat kerja | Navbar untuk publik & siswa; sidebar Ink khusus Area Instruktur/Admin (§9) |
+| Belum ada komponen Toast, Modal, Skeleton bersama | Umpan balik tidak seragam antar halaman | Komponen bersama di §8 |
+| Fokus keyboard memakai outline amber 2px | Ikut berganti dengan aksen | Cincin fokus 3px Sprout + jarak 2px (§18) |
+
+Migrasi dilakukan bertahap per halaman; jangan mencampur dua tema dalam satu halaman.
 
 ---
 
@@ -96,9 +100,9 @@ Temuan dari project yang perlu diluruskan oleh kaidah ini:
 
 | Token | Hex | Nama | Peran |
 |---|---|---|---|
-| `color.ink` | **#202734** | Ink | Teks utama, sidebar, kartu sorotan, tombol sekunder gelap |
+| `color.ink` | **#202734** | Ink | Teks utama, sidebar instruktur, kartu sorotan, tombol sekunder gelap |
 | `color.slate` | **#36415A** | Slate | Teks sekunder kuat, permukaan gelap tingkat 2, hover pada Ink |
-| `color.sprout` | **#B7D894** | Sprout | Aksen utama: tombol primer, item aktif, progres, fokus |
+| `color.sprout` | **#B7D894** | Sprout | Aksen utama: tombol primer, item aktif, progres, fokus, exposure tepat |
 | `color.mint` | **#E0F8C7** | Mint | Latar aksen lembut: badge, highlight, state terpilih, latar sukses |
 
 ### 4.2 Skala turunan
@@ -107,7 +111,7 @@ Temuan dari project yang perlu diluruskan oleh kaidah ini:
 
 | Step | Hex | Penggunaan |
 |---|---|---|
-| 50 | #F3FCEB | Latar halaman bagian sorotan, hover baris tabel |
+| 50 | #F3FCEB | Latar bagian sorotan, hover baris tabel |
 | 100 | **#E0F8C7** | Mint — badge, chip terpilih, latar sukses |
 | 200 | #CDEAAE | Border aksen, track progres di atas Mint |
 | 300 | **#B7D894** | Sprout — warna merek |
@@ -143,25 +147,41 @@ Warna status **tidak boleh** dipakai sebagai dekorasi.
 
 | Status | Teks / ikon | Latar | Border | Contoh |
 |---|---|---|---|---|
-| Sukses | #4A6E2C | #E0F8C7 | #CDEAAE | "Goal Tercapai", "Unlocked", "Selesai" |
-| Peringatan | #8E6A12 | #FDF3DC | #F3DFA8 | "Sesi dimulai 10 menit lagi", streak hampir putus |
-| Bahaya | #B3372F | #FDECEA | #F5C6C2 | Error form, "Matikan 2FA", logout semua sesi, banned |
-| Info | #45506A | #E6E9EF | #C9CEDA | "Email dikelola oleh Google", tips |
-| Live | #FFFFFF di #B3372F | — | — | Label **LIVE** pada sesi yang sedang berlangsung |
+| Sukses | #4A6E2C | #E0F8C7 | #CDEAAE | "Lulus", "Selesai", "Latihan berhasil" |
+| Peringatan | #8E6A12 | #FDF3DC | #F3DFA8 | "EXIF tidak ditemukan", "Shutter berisiko goyang" |
+| Bahaya | #B3372F | #FDECEA | #F5C6C2 | Error form, file ditolak, highlight terpotong, hapus materi |
+| Info | #45506A | #E6E9EF | #C9CEDA | "Hasil disimpan di browser ini", tips |
 
-### 4.4 Pengecualian gamifikasi
+### 4.4 Zona foto netral (pengecualian khusus fotografi)
 
-Hanya untuk peringkat 1–3 di Leaderboard dan lencana langka:
+Area yang menampilkan gambar untuk **dinilai kecerahan/warnanya** memakai bingkai abu-abu netral, bukan warna merek.
 
-| Medali | Latar | Teks/ikon |
+| Token | Hex | Untuk |
 |---|---|---|
-| Emas | #FBF1D3 | #8E6A12 |
-| Perak | #E6E9EF | #45506A |
-| Perunggu | #F6E4D6 | #8A4E24 |
+| `photo.surround` | #262626 | Latar di sekeliling pratinjau simulator, foto unggahan, dan histogram |
+| `photo.panel` | #303030 | Panel kecil yang menempel pada pratinjau (overlay angka setelan) |
+| `photo.rule` | #444444 | Garis grid, garis bantu histogram |
+| `photo.text` | #ECECEC | Teks di atas zona foto |
 
-Streak tidak lagi oranye. Ikon api memakai **Sprout di atas Ink** (kartu gelap) atau **Hijau-700 di atas Mint** (kartu terang), sehingga streak terasa sebagai bagian dari identitas merek.
+**Aturan:**
+- Zona foto adalah satu kotak `radius-xl` dengan padding 16–24px; di luar kotak itu halaman tetap memakai tema terang.
+- Jangan menaruh Sprout/Mint, gradien, atau bayangan berwarna di dalam zona foto. Satu-satunya aksen yang boleh: penanda meter exposure dan penanda clipping.
+- Thumbnail foto di dasbor dan riwayat juga diberi border 1px Ink-100, tanpa latar berwarna.
 
-### 4.5 Aturan kombinasi (kontras)
+### 4.5 Status exposure
+
+Dipakai pada meter exposure, kartu hasil latihan, dan hasil analisis foto. Status **tidak boleh** dibedakan oleh warna saja.
+
+| Status | Rentang | Warna | Ikon / teks wajib |
+|---|---|---|---|
+| Kurang (underexposed) | < −0,5 EV | Peringatan | Panah ke bawah + "Kurang 1⅓ stop" |
+| Tepat | −0,5 sampai +0,5 EV | Sukses (penanda Sprout) | Centang + "Exposure tepat" |
+| Berlebih (overexposed) | > +0,5 EV | Peringatan | Panah ke atas + "Berlebih ⅔ stop" |
+| Terpotong (clipping) | Shadow/highlight terpotong | Bahaya | Pola arsir di histogram + "3% highlight terpotong" |
+
+Ambang ±0,5 EV mengikuti kriteria latihan di `lib/exercises.js`. Jika ambang di kode berubah, tabel ini ikut diperbarui.
+
+### 4.6 Aturan kombinasi (kontras)
 
 | Kombinasi | Rasio | Boleh untuk |
 |---|---|---|
@@ -171,19 +191,20 @@ Streak tidak lagi oranye. Ikon api memakai **Sprout di atas Ink** (kartu gelap) 
 | Ink di atas Mint | 13.2 : 1 | Teks badge / chip |
 | Sprout di atas Ink | 9.5 : 1 | Teks/ikon aksen di kartu gelap, item aktif sidebar |
 | Mint di atas Slate | 8.9 : 1 | Teks di permukaan gelap tingkat 2 |
-| Hijau-700 di atas Putih | 5.9 : 1 | Tautan, angka XP, persentase |
+| Hijau-700 di atas Putih | 5.9 : 1 | Tautan, persentase, nilai kuis |
+| #ECECEC di atas #262626 | 13.4 : 1 | Teks di zona foto |
 | **Sprout di atas Putih** | **1.6 : 1** | ❌ **Dilarang untuk teks.** Hanya isian bar progres, titik indikator, garis aksen |
 | Putih di atas Sprout | 1.6 : 1 | ❌ **Dilarang.** Tombol hijau selalu memakai teks Ink |
 
-### 4.6 Proporsi warna (60-30-10)
+### 4.7 Proporsi warna (60-30-10)
 
 - **60%** — Latar `#F6F8F3` dan kartu putih.
 - **30%** — Ink & Slate (teks, sidebar, kartu sorotan).
 - **10%** — Sprout & Mint (aksi, progres, status aktif).
 
-Jika satu layar terlihat "terlalu hijau", kurangi Mint lebih dulu, baru Sprout.
+Zona foto tidak dihitung dalam proporsi ini. Jika satu layar terlihat "terlalu hijau", kurangi Mint lebih dulu, baru Sprout.
 
-### 4.7 Mode gelap (opsional, disiapkan sejak awal)
+### 4.8 Mode gelap (opsional, disiapkan sejak awal)
 
 | Peran | Mode terang | Mode gelap |
 |---|---|---|
@@ -196,37 +217,48 @@ Jika satu layar terlihat "terlalu hijau", kurangi Mint lebih dulu, baru Sprout.
 | Aksen | #B7D894 | #B7D894 |
 | Latar aksen lembut | #E0F8C7 | Sprout 12% di atas #202734 |
 | Teks/tautan hijau | #4A6E2C | #B7D894 |
+| Zona foto | #262626 | #262626 (tidak berubah) |
 
 ---
 
 ## 5. Fondasi: Tipografi
 
-**Typeface:** Instrument Sans (sudah dipakai). Bentuknya modern dan cukup karakter untuk heading, tetap nyaman untuk teks panjang.
-**Angka:** gunakan *tabular figures* untuk XP, peringkat, skor CV, timer, dan tabel agar angka tidak "bergoyang" saat berubah.
+**Typeface:** Instrument Sans. Bentuknya modern dan cukup berkarakter untuk heading, tetap nyaman untuk teks materi yang panjang.
+**Angka:** gunakan *tabular figures* (kelas `.tabular`) untuk aperture, shutter, ISO, EV, focal length, nilai kuis, persentase, dan tabel agar angka tidak "bergoyang" saat dial diputar.
 
 ### 5.1 Skala
 
 | Token | Ukuran / tinggi baris | Bobot | Penggunaan |
 |---|---|---|---|
-| `display` | 48 / 56 | 700 | Hero beranda, angka streak besar |
-| `h1` | 32 / 40 | 700 | Judul halaman ("Halo, Dewi!", "Peringkat Global") |
-| `h2` | 24 / 32 | 700 | Judul section ("Sesi Mentoring Mendatang") |
+| `display` | 48 / 56 | 700 | Hero beranda |
+| `h1` | 32 / 40 | 700 | Judul halaman ("Halo, Dewi.", "Simulator kamera") |
+| `h2` | 24 / 32 | 700 | Judul section ("Kursus yang kamu ikuti") |
 | `h3` | 20 / 28 | 600 | Judul kartu, judul modal |
 | `h4` | 16 / 24 | 600 | Sub-judul kartu, nama item list |
-| `body-lg` | 16 / 26 | 400 | Teks paragraf, deskripsi materi |
+| `body-lg` | 16 / 26 | 400 | Teks materi, deskripsi kursus |
 | `body` | 14 / 22 | 400 | Teks UI umum |
 | `body-strong` | 14 / 22 | 600 | Label tombol, nilai di tabel |
-| `caption` | 12 / 16 | 500 | Metadata (tanggal, durasi, "Reset tiap Senin") |
-| `overline` | 12 / 16 | 600, kapital, tracking +0.06em | Label kecil di atas angka statistik ("TOTAL XP") |
-| `stat` | 28 / 32 | 700 | Angka utama kartu statistik |
+| `caption` | 12 / 16 | 500 | Metadata (tanggal, jumlah materi, nama kamera) |
+| `overline` | 12 / 16 | 600, kapital, tracking +0.06em | Label kecil di atas angka ("APERTURE", "NILAI") |
+| `stat` | 28 / 32 | 700 | Angka utama kartu statistik dan nilai setelan pada dial |
 
 ### 5.2 Aturan
 
-- **Tidak ada teks di bawah 12px.** Ganti semua label 9–11px menjadi `caption` atau `overline`.
-- Huruf kapital penuh **hanya** untuk `overline` dan label status singkat (LIVE). Judul sesi, nama misi, dan tombol memakai *sentence case*.
+- **Tidak ada teks di bawah 12px**, termasuk label di dial dan histogram.
+- Huruf kapital penuh **hanya** untuk `overline`. Judul kursus, materi, dan tombol memakai *sentence case*.
 - Maksimal 3 ukuran huruf dalam satu kartu.
-- Panjang baris teks bacaan 60–75 karakter (deskripsi materi, catatan, kebijakan privasi).
+- Panjang baris teks materi 60–75 karakter (`max-width: 68ch`).
 - Bobot 800–900 tidak dipakai; hierarki dibangun dari ukuran dan warna, bukan ketebalan saja.
+
+### 5.3 Notasi setelan kamera
+
+| Besaran | Format | Contoh |
+|---|---|---|
+| Aperture | `f/` + angka, titik desimal (konvensi kamera) | f/1.4, f/5.6, f/16 |
+| Shutter speed | Pecahan untuk < 1 detik, tanda detik `″` untuk ≥ 1 detik | 1/4000, 1/60, 1″, 2″ |
+| ISO | "ISO" + angka dengan titik ribuan | ISO 100, ISO 6.400 |
+| Exposure value | Tanda minus asli (−), pecahan sepertiga | −1⅓ EV, +⅔ EV, 0 EV |
+| Focal length | angka + "mm" | 85 mm, setara 35 mm: 120 mm |
 
 ---
 
@@ -251,10 +283,11 @@ Jika satu layar terlihat "terlalu hijau", kurangi Mint lebih dulu, baru Sprout.
 
 | Konteks | Lebar maksimum | Kolom | Gutter |
 |---|---|---|---|
-| Area aplikasi (dengan sidebar) | 1440px total; konten 1200px | 12 | 24px |
-| Halaman baca (Profil, Pengaturan, Detail Sesi) | 960px | 12 | 24px |
-| Form tunggal (Masuk, Daftar, Lupa Password) | 440px | 1 | — |
-| Halaman publik | 1200px | 12 | 32px |
+| Halaman aplikasi (Kursus, Dasbor, Analisis) | 1200px | 12 | 24px |
+| Simulator | 1200px; pratinjau 8 kolom, panel setelan 4 kolom | 12 | 24px |
+| Halaman baca (Materi, Kuis) | 760px untuk isi; panel daftar materi di samping | 12 | 24px |
+| Form tunggal (Masuk, Daftar) | 440px | 1 | — |
+| Area Instruktur (dengan sidebar) | 1440px total; konten 1200px | 12 | 24px |
 
 ### 6.3 Radius (5 tingkat saja)
 
@@ -262,11 +295,9 @@ Jika satu layar terlihat "terlalu hijau", kurangi Mint lebih dulu, baru Sprout.
 |---|---|---|
 | `radius-sm` | 8px | Chip kecil, badge, tooltip |
 | `radius-md` | 12px | Tombol, input, item menu, tab pill |
-| `radius-lg` | 16px | Kartu kecil (stat, badge card), dropdown |
-| `radius-xl` | 24px | Kartu utama, modal, panel |
+| `radius-lg` | 16px | Kartu kecil (stat), dropdown, thumbnail foto |
+| `radius-xl` | 24px | Kartu utama, modal, panel, zona foto |
 | `radius-full` | 999px | Avatar, progress bar, toggle, pill status |
-
-Variasi 32px, 40px, 48px, dan 56px yang ada sekarang dirampingkan ke `radius-xl`.
 
 ### 6.4 Elevasi
 
@@ -277,7 +308,7 @@ Variasi 32px, 40px, 48px, dan 56px yang ada sekarang dirampingkan ke `radius-xl`
 | 2 | 0 8px 24px rgba(32,39,52,.08) | Kartu saat hover, dropdown, navbar saat scroll |
 | 3 | 0 24px 48px rgba(32,39,52,.16) | Modal, toast |
 
-Bayangan berwarna (biru/oranye) yang ada sekarang dihapus. Bayangan selalu berbasis Ink.
+Bayangan selalu berbasis Ink. Zona foto tidak diberi bayangan.
 
 ---
 
@@ -289,27 +320,29 @@ Bayangan berwarna (biru/oranye) yang ada sekarang dihapus. Bayangan selalu berba
 - Warna ikon mengikuti teks di sekitarnya; ikon aksen memakai Hijau-600 (latar terang) atau Sprout (latar gelap).
 - Wadah ikon pada kartu statistik: kotak 44×44px, `radius-md`, latar Mint, ikon Hijau-800.
 
-**Pemetaan menu (pengganti emoji di sidebar):**
+**Pemetaan menu:**
 
 | Menu | Ikon |
 |---|---|
-| Dashboard | grid / layout |
-| Kursus Saya | buku terbuka |
-| Misi & Lencana | target |
-| Career Center | koper |
-| Leaderboard | piala |
-| Mentoring | video / dua orang |
-| Profil | pengguna |
-| Pengaturan | roda gigi |
+| Beranda | rumah |
+| Kursus | buku terbuka |
+| Simulator kamera | kamera |
+| Analisis foto | gambar + kaca pembesar |
+| Dasbor | grid / layout |
+| Area Instruktur — Ringkasan | papan / presentasi |
+| Area Instruktur — Siswa & Nilai | dua orang |
+| Pengguna & Peran (admin) | perisai |
+
+**Ikon setelan:** aperture = diafragma (bilah lensa), shutter = stopwatch, ISO = bintik/grain, focal length = lensa, tripod = tripod.
 
 ### 7.2 Emoji
 
-Emoji boleh dipakai **hanya** di konten emosional: sapaan ("Halo, Dewi 👋"), perayaan ("Goal tercapai 🎉"), dan reaksi chat live. Tidak untuk navigasi, label, atau ikon fungsional.
+Emoji boleh dipakai **hanya** di konten emosional: sapaan ("Halo, Dewi 👋") dan perayaan ("Kuis lulus 🎉"). Tidak untuk navigasi, label, status, atau ikon fungsional.
 
 ### 7.3 Ilustrasi
 
-- Gaya datar, dua warna (Ink + Sprout) dengan Mint sebagai latar bentuk.
-- Dipakai pada empty state, onboarding, dan halaman sukses.
+- Gaya datar, dua warna (Ink + Sprout) dengan Mint sebagai latar bentuk. Motif: kamera, lensa, diafragma, bingkai foto.
+- Dipakai pada empty state, hero beranda, dan layar sukses (kursus selesai).
 
 ### 7.4 Motion
 
@@ -320,10 +353,11 @@ Emoji boleh dipakai **hanya** di konten emosional: sapaan ("Halo, Dewi 👋"), p
 | `motion-slow` | 320ms | cubic-bezier(.2,.8,.2,1) | Modal, drawer, toast |
 | `motion-progress` | 800ms | ease-out | Pengisian progress bar saat halaman dibuka |
 
+- **Pratinjau simulator tidak memakai transisi.** Perubahan kecerahan, blur, dan noise tampil langsung saat dial diputar agar sebab-akibat terasa jelas.
+- Animasi mobil di live view simulator adalah konten, bukan dekorasi; tetap sediakan tombol jeda.
 - Hover kartu: naik 2px + elevasi 1 → 2. Tidak ada rotasi atau skala ikon.
-- Animasi berulang (memantul, berdenyut) **hanya** untuk indikator LIVE dan skeleton.
-- Perayaan (konfeti kecil, naik level) diputar **sekali** lalu berhenti.
-- Hormati preferensi "kurangi gerakan": matikan semua transisi selain perubahan opasitas.
+- Perayaan (latihan lulus, kuis lulus) diputar **sekali** lalu berhenti.
+- Hormati preferensi "kurangi gerakan": matikan semua transisi selain perubahan opasitas, dan jeda animasi mobil secara default.
 
 ---
 
@@ -335,12 +369,12 @@ Setiap komponen di bawah mencantumkan anatomi, varian, state, dan aturan pakai.
 
 | Varian | Latar | Teks | Hover | Penggunaan |
 |---|---|---|---|---|
-| **Primary** | Sprout #B7D894 | Ink | Hijau-400 | Satu aksi utama per layar/kartu: "Simpan Target", "Daftar Bootcamp", "Lanjutkan Materi" |
-| **Dark** | Ink #202734 | Putih | Slate | Aksi kuat sekunder: "Lihat Sesi", "Ubah Password", "Log Out Sesi Lain" |
-| **Secondary** | Putih, border Ink-200 | Ink | Ink-50 | "Sertifikat Saya", "Batal" berbentuk tombol |
+| **Primary** | Sprout #B7D894 | Ink | Hijau-400 | Satu aksi utama per layar/kartu: "Lanjutkan materi", "Kirim jawaban", "Analisis foto" |
+| **Dark** | Ink #202734 | Putih | Slate | Aksi kuat sekunder: "Coba di simulator", "Terbitkan kursus" |
+| **Secondary** | Putih, border Ink-200 | Ink | Ink-50 | "Ulangi kuis", "Pratinjau materi" |
 | **Ghost** | Transparan | Ink-600 | Ink-50 | Aksi tersier di toolbar, "Batal" di modal |
-| **Link** | — | Hijau-700, garis bawah saat hover | — | "Semua Jadwal →", "Lihat Semua Bootcamp" |
-| **Danger** | #B3372F | Putih | lebih gelap 8% | "Matikan 2FA", "Ban Pengguna", "Hapus Misi" |
+| **Link** | — | Hijau-700, garis bawah saat hover | — | "Lihat semua kursus →", "Mengapa saran ini muncul?" |
+| **Danger** | #B3372F | Putih | lebih gelap 8% | "Hapus materi", "Hapus kuis", "Cabut peran instruktur" |
 
 **Ukuran:** S 32px (teks 13px) · M 40px (14px) · L 48px (16px). Padding horizontal 16 / 20 / 24px. Radius `radius-md`.
 
@@ -361,39 +395,39 @@ Setiap komponen di bawah mencantumkan anatomi, varian, state, dan aturan pakai.
 | Hover | Border Ink-300 |
 | Focus | Latar putih, border Hijau-600, cincin 3px Mint |
 | Error | Border #B3372F, teks error merah di bawah + ikon |
-| Disabled / terkunci | Latar Ink-50, teks Ink-400, ikon gembok + alasan ("Email dikelola oleh Google") |
+| Disabled / terkunci | Latar Ink-50, teks Ink-400, ikon gembok + alasan |
 | Sukses (opsional) | Ikon centang Hijau-600 di kanan |
 
 **Jenis input khusus:**
 - **Password** — tombol tampil/sembunyikan; indikator kekuatan (bar 4 segmen: merah → kuning → hijau).
-- **Kode OTP / 2FA** — 6 kotak terpisah 48×56px, angka tabular, auto-pindah ke kotak berikutnya, bisa tempel kode.
-- **Angka dengan unit** (target mingguan) — stepper −/+ di kiri-kanan, sufiks "materi" di dalam field.
-- **Upload file** (CV, Final Project, tugas) — dropzone border putus-putus Ink-200, ikon dokumen, teks "Tarik file ke sini atau pilih file", aturan format di caption ("PDF atau DOCX, maks. 2 MB"). Saat file di-drag: border Hijau-600, latar Mint. Setelah dipilih: baris file dengan nama, ukuran, progres unggah, tombol hapus.
-- **Upload foto profil** — avatar bulat dengan tombol kamera kecil di pojok kanan bawah; pratinjau sebelum simpan.
+- **Unggah foto** (Analisis Foto) — dropzone border putus-putus Ink-200, ikon gambar, teks "Tarik foto ke sini atau pilih file", caption format "JPG, PNG, WEBP, HEIC, atau TIFF, maks. 25 MB". Saat file di-drag: border Hijau-600, latar Mint. Setelah dipilih: thumbnail di zona foto, nama file, ukuran, tombol "Ganti foto".
+- **Setelan manual** (jika EXIF kosong) — tiga select berdampingan: aperture, shutter, ISO, memakai nilai yang sama dengan dial simulator; caption "Isi sesuai setelan kamera saat memotret".
+- **Editor Markdown** (Area Instruktur) — dua panel: tulis | pratinjau, toolbar sesuai subset yang didukung (judul, daftar, kutipan, kode, tebal, miring, tautan).
 - **Select / Dropdown** — sama seperti input, chevron di kanan, daftar opsi dengan elevasi 2.
 
 **Aturan form:**
 - Label selalu terlihat (tidak hanya placeholder).
 - Validasi saat field kehilangan fokus, bukan saat mengetik.
-- Pesan error menjelaskan cara memperbaiki: "Password minimal 8 karakter" — bukan "Input tidak valid".
+- Pesan error menjelaskan cara memperbaiki: "Ukuran foto maks. 25 MB. Pilih foto lain atau kecilkan resolusinya." — bukan "File tidak valid".
 
 ### 8.3 Card
 
 | Varian | Tampilan | Contoh |
 |---|---|---|
-| **Base** | Putih, border Ink-100, `radius-xl`, padding 24px | Kartu Aktivitas Belajar, form Pengaturan |
-| **Interactive** | Base + elevasi 1; hover: naik 2px, elevasi 2, border Hijau-200 | Kartu Streak, Level, kartu Bootcamp |
-| **Highlight (Ink)** | Latar Ink, teks putih/Mint, aksen Sprout, dekorasi lingkaran Slate samar | Career Center di Dashboard, Talent License, hero detail Bootcamp |
-| **Soft (Mint)** | Latar Mint, border Hijau-200 | Tips misi, info sertifikat, banner "Goal tercapai" |
-| **Stat** | Base kecil (`radius-lg`, padding 20px): ikon dalam wadah Mint + overline + angka `stat` | Total XP, Level, Day Streak |
+| **Base** | Putih, border Ink-100, `radius-xl`, padding 24px | Kartu kuis terakhir, form editor |
+| **Interactive** | Base + elevasi 1; hover: naik 2px, elevasi 2, border Hijau-200 | Kartu kursus di katalog, kartu latihan simulator |
+| **Highlight (Ink)** | Latar Ink, teks putih/Mint, aksen Sprout | Hero detail kursus, ajakan "Coba simulator" di beranda |
+| **Soft (Mint)** | Latar Mint, border Hijau-200 | Tips di materi, banner "Kuis lulus" |
+| **Stat** | Base kecil (`radius-lg`, padding 20px): ikon dalam wadah Mint + overline + angka `stat` | Materi selesai, Rata-rata nilai kuis, Latihan lulus |
+| **Foto** | Zona foto netral (§4.4) di atas, isi putih di bawah | Riwayat analisis foto, hasil latihan |
 
 **Anatomi kartu standar:** header (ikon + judul + aksi tautan di kanan) → isi → footer opsional dipisah divider.
 
 ### 8.4 Progress
 
-- **Bar linear** — track Ink-100, isian Sprout, tinggi 8px (kompak) atau 12px (kartu target), `radius-full`. Persentase di kanan atas dengan Hijau-700. Saat 100%: isian Hijau-500 + ikon centang.
-- **Ring / lingkaran** — untuk skor CV (/100), progres hari ini di materi, evolusi level. Ketebalan 8px, track Ink-100, isian Sprout, angka di tengah.
-- **Stepper** — untuk kurikulum per hari dan roadmap level: titik 12px; selesai = Sprout berisi centang, aktif = cincin Sprout, terkunci = Ink-200 + gembok.
+- **Bar linear** — track Ink-100, isian Sprout, tinggi 8px (kompak) atau 12px (kartu kursus), `radius-full`. Persentase di kanan atas dengan Hijau-700. Saat 100%: isian Hijau-500 + ikon centang.
+- **Ring** — untuk progres kursus di halaman detail dan nilai kuis. Ketebalan 8px, track Ink-100, isian Sprout, angka di tengah.
+- **Stepper** — untuk daftar materi dalam modul: titik 12px; selesai = Sprout berisi centang, sedang dibuka = cincin Sprout, belum = Ink-200.
 
 Tanpa gradien, tanpa efek berdenyut di dalam bar.
 
@@ -401,64 +435,68 @@ Tanpa gradien, tanpa efek berdenyut di dalam bar.
 
 | Jenis | Tampilan | Contoh |
 |---|---|---|
-| Status | Pill, latar + teks semantik (§4.3) | Selesai, Aktif, Terjadwal, Banned |
-| XP | Pill Mint, teks Hijau-800, ikon bintang | "+200 XP", "1.250 XP" |
-| Level/Rank | Pill Ink, teks Sprout | "Level 3 · Explorer" |
-| Kategori | Pill Ink-50, teks Ink-600 | Misi Harian, Video, Quiz, PDF |
-| LIVE | Pill merah, titik putih berdenyut | Sesi sedang berlangsung |
-| Wajib | Teks caption Hijau-700 dengan titik | "• Wajib" pada materi harian |
+| Status | Pill, latar + teks semantik (§4.3) | Selesai, Lulus, Belum lulus, Draf, Terbit |
+| Level kursus | Pill Ink-50, teks Ink-600 | Pemula, Menengah, Mahir |
+| Jenis konten | Pill Ink-50, teks Ink-600, ikon | Materi, Kuis, Latihan simulator |
+| Peran | Pill Ink, teks Sprout | Instruktur, Admin |
+| Aturan sistem pakar | Pill semantik | Terpicu (Peringatan), Tidak terpicu (Info), Dilewati (Ink-50) |
 
 ### 8.6 Tabs
 
-- **Underline tabs** — untuk berpindah konten dalam satu halaman (Materi: Ringkasan · Catatan · Transkrip · Playground · Tugas; Misi: Harian · Mingguan · Spesial). Aktif: teks Ink + garis bawah 2px Sprout; tidak aktif: Ink-500.
-- **Segmented control** — untuk filter singkat (Leaderboard: Mingguan · Bulanan · Sepanjang Masa). Wadah Ink-50, item aktif putih dengan elevasi 1.
+- **Underline tabs** — untuk berpindah konten dalam satu halaman (Analisis: Saran · Histogram · Data EXIF · Mengapa saran ini muncul; Editor: Isi · Kuis · Pengaturan). Aktif: teks Ink + garis bawah 2px Sprout; tidak aktif: Ink-500.
+- **Segmented control** — untuk filter singkat (Katalog: Semua · Pemula · Menengah · Mahir; Kondisi cahaya di simulator). Wadah Ink-50, item aktif putih dengan elevasi 1.
 
 ### 8.7 Navigasi pendukung
 
-- **Breadcrumb** — caption Ink-500, pemisah "›", item terakhir Ink tanpa tautan. Wajib di halaman tingkat 2+ (Detail Sesi, Materi, CV Analyzer, Bot Interview, Final Project).
-- **Tautan kembali** — "← Kembali ke Dashboard" dipakai di mobile; di desktop cukup breadcrumb.
+- **Breadcrumb** — caption Ink-500, pemisah "›", item terakhir Ink tanpa tautan. Wajib di halaman tingkat 2+ (Detail Kursus, Materi, Kuis, halaman editor).
+- **Tautan kembali** — "← Kembali ke kursus" dipakai di mobile; di desktop cukup breadcrumb.
+- **Navigasi materi** — di bawah isi materi: "← Sebelumnya" (Ghost) dan "Tandai selesai & lanjut →" (Primary).
 - **Pagination** — tombol angka 36×36px `radius-md`; aktif = latar Ink, teks putih.
 
 ### 8.8 List & Table
 
-- **List item** — tinggi minimum 56px, avatar/ikon kiri, judul + metadata tengah, nilai/aksi kanan. Hover latar Hijau-50.
-- **Leaderboard row** — peringkat (wadah 40×40px; 1–3 memakai warna medali), avatar, nama + rank, XP rata kanan tabular. Baris pengguna sendiri: latar Mint, border kiri 3px Sprout, label "Kamu", dan dipin di bawah daftar jika di luar layar.
-- **Data table (admin)** — header overline Ink-500 di latar Ink-50, baris 56px, zebra tidak dipakai (cukup divider), kolom aksi ikon dengan tooltip, checkbox untuk aksi massal.
+- **List item** — tinggi minimum 56px, ikon/thumbnail kiri, judul + metadata tengah, nilai/aksi kanan. Hover latar Hijau-50.
+- **Riwayat percobaan kuis** — tanggal, nilai tabular, pill Lulus/Belum lulus; percobaan terbaik ditandai "Terbaik".
+- **Data table (instruktur/admin)** — header overline Ink-500 di latar Ink-50, baris 56px, tanpa zebra (cukup divider), kolom angka rata kanan tabular, kolom aksi ikon dengan tooltip.
 
 ### 8.9 Avatar
 
-Ukuran 24 / 32 / 40 / 64 / 112px. Tanpa foto: inisial dua huruf, latar Mint, teks Hijau-800. Status online: titik 10px Hijau-500 dengan border putih 2px.
+Ukuran 24 / 32 / 40 / 64px. Tanpa foto: inisial dua huruf, latar Mint, teks Hijau-800.
 
 ### 8.10 Modal, Drawer, Dropdown
 
 - **Modal** — lebar 440px (konfirmasi) / 560px (form), `radius-xl`, padding 32px, overlay Ink-950 60% + blur ringan. Judul h3, deskripsi body Ink-500, aksi di bawah. Tutup lewat tombol ×, Esc, atau klik overlay (kecuali modal destruktif yang sedang memproses).
-- **Modal konfirmasi destruktif** — ikon peringatan dalam lingkaran merah lembut, judul berupa pertanyaan ("Keluar dari semua perangkat lain?"), tombol Danger + Ghost "Batal". Untuk aksi keamanan, minta verifikasi sesuai jenis akun: password, kode 2FA, atau konfirmasi akun Google.
-- **Drawer** — untuk menu mobile dan panel chat live di mobile; masuk dari kanan/bawah.
-- **Dropdown akun** — dari avatar di navbar: blok email (caption), lalu Profil Saya, Pengaturan, divider, Keluar (teks merah).
+- **Modal konfirmasi destruktif** — ikon peringatan dalam lingkaran merah lembut, judul berupa pertanyaan ("Hapus modul ini beserta 4 materinya?"), tombol Danger + Ghost "Batal".
+- **Drawer** — untuk menu mobile, panel setelan simulator di mobile, dan daftar materi di mobile.
+- **Dropdown akun** — dari avatar di navbar: nama + email (caption), Dasbor, Area Instruktur (bila berperan), divider, Keluar (teks merah).
 
 ### 8.11 Toast & Banner
 
-- **Toast** — muncul kanan atas (desktop) / atas tengah (mobile), lebar 360px, latar Ink, teks putih, ikon status berwarna (Sprout untuk sukses), hilang setelah 4 detik, bisa ditutup. Contoh: "Profil berhasil diperbarui", "Kamu mendapat +10 XP ✨".
-- **Banner inline** — di dalam halaman, latar semantik lembut, untuk informasi yang harus tetap terlihat (mis. "Akun ini terhubung dengan Google, email tidak bisa diubah").
+- **Toast** — kanan atas (desktop) / atas tengah (mobile), lebar 360px, latar Ink, teks putih, ikon status berwarna (Sprout untuk sukses), hilang setelah 4 detik, bisa ditutup. Contoh: "Materi ditandai selesai", "Latihan lulus 🎉", "Perubahan disimpan".
+- **Banner inline** — di dalam halaman, latar semantik lembut, untuk informasi yang harus tetap terlihat. Contoh: "Kamu belum masuk. Hasil latihan disimpan di browser ini saja." (Info) atau "Foto ini tidak memiliki data EXIF." (Peringatan).
 
 ### 8.12 Skeleton
 
-Blok Ink-100 dengan kilau halus, bentuk **sama persis** dengan konten akhir (kartu, baris list, avatar), radius mengikuti komponen aslinya.
+Blok Ink-100 dengan kilau halus, bentuk **sama persis** dengan konten akhir (kartu, baris list, thumbnail), radius mengikuti komponen aslinya. Di zona foto, skeleton memakai `photo.panel`.
 
 ### 8.13 Empty State
 
 Ilustrasi kecil (maks. 120px) → judul h4 → satu kalimat penjelas → satu tombol aksi. Wadah: border putus-putus Ink-200, `radius-xl`, latar putih.
 
-### 8.14 Komponen khusus gamifikasi
+### 8.14 Komponen khusus fotografi
 
 | Komponen | Anatomi |
 |---|---|
-| **XP Pill (navbar)** | Ikon bintang Sprout + angka XP, latar Ink, teks putih. Klik → halaman Level |
-| **Streak Counter** | Ikon api + angka besar `display` + label "hari beruntun"; kalender 7 hari (lingkaran: aktif = Sprout, terlewat = Ink-100, hari ini = cincin Sprout) |
-| **Level/Evolution Card** | Ilustrasi karakter level, nama level, bar menuju level berikutnya ("30 / 150 XP"), tombol "Lihat Roadmap" |
-| **Badge Card** | Ikon dalam wadah 48px, judul, deskripsi syarat, status. Terkunci: ikon abu + bar progres + persentase; terbuka: wadah Mint + pill "Terbuka" |
-| **Mission Card** | Ikon kategori, nama misi, deskripsi, bar progres (mis. 3/5), reward XP di kanan, status. Selesai: centang + latar Hijau-50 |
-| **Level Up Modal** | Ilustrasi level baru, "Kamu naik ke Level 4!", daftar hadiah yang terbuka, tombol Primary "Lanjut Belajar" |
+| **Setting Dial** | Overline nama setelan ("APERTURE") + nilai `stat` tabular di atas; slider berskala takik di bawah; ibu jari slider Sprout, takik `photo.rule`. Bisa diatur dengan panah keyboard per 1/3 stop. Nilai ekstrem diberi caption ("f/1.4 — ruang tajam paling tipis") |
+| **Exposure Meter** | Skala −3 … +3 EV dengan takik 1/3 stop, penanda posisi, dan label status §4.5 di bawahnya. Angka EV tabular di kanan |
+| **Viewfinder / Pratinjau** | Zona foto 3:2, overlay setelan di pojok bawah (`photo.panel`), tombol jeda animasi, tombol layar penuh |
+| **Kartu Latihan** | Judul latihan, deskripsi tujuan, daftar kriteria dengan centang/silang per kriteria ("Mobil tampak beku (motion blur ≤ 3 px)"), status Lulus/Belum lulus, tombol "Coba lagi" |
+| **Histogram** | Di zona foto; luminans + opsional RGB; area shadow/highlight terpotong diarsir dengan warna Bahaya + persentase di caption |
+| **Tabel EXIF** | Dua kolom (nama · nilai), dikelompokkan: Setelan (aperture, shutter, ISO, focal length) · Perangkat (kamera, lensa) · Lainnya (flash, white balance, mode exposure, metering, kompensasi). Nilai kosong ditulis "Tidak tercatat" (Ink-400), bukan dikosongkan |
+| **Kartu Saran** | Ikon aturan, kalimat saran, setelan sekarang → setelan disarankan ("1/30 → 1/100, ISO 200 → 640") dalam pill tabular, tombol "Coba di simulator" yang membuka simulator dengan setelan tersebut |
+| **Tabel Jejak Aturan** | "Mengapa saran ini muncul": nama aturan, kondisi, pill status (Terpicu/Tidak terpicu/Dilewati), alasan dilewati ("Data shutter tidak tersedia") |
+| **Pertanyaan Kuis** | Nomor "Pertanyaan 2 dari 5", teks soal `body-lg`, opsi sebagai radio card penuh (tinggi ≥ 56px). Terpilih: border Sprout + latar Hijau-50 |
+| **Hasil Kuis** | Ring nilai, ambang lulus ("Lulus minimal 70"), pill Lulus/Belum lulus, ringkasan benar/salah per soal, tombol "Ulangi kuis" (Secondary) dan "Lanjut ke materi berikutnya" (Primary) |
 
 ---
 
@@ -467,538 +505,412 @@ Ilustrasi kecil (maks. 120px) → judul h4 → satu kalimat penjelas → satu to
 ### 9.1 Navbar (tinggi 64px, menempel di atas)
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│ [Logo] Learnify      [ 🔍 Cari bootcamp, materi…       ]   ★ 1.250 XP  🔔  (Avatar ▾) │
-└────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────┐
+│ [Logo] Akademi Kamera   Kursus  Simulator kamera  Analisis foto  Dasbor   (Avatar ▾) │
+└────────────────────────────────────────────────────────────────────────────┘
 ```
 
 - Latar putih, border bawah Ink-100; elevasi 2 saat halaman di-scroll.
-- **Logo:** kotak 36px `radius-md` latar Ink dengan huruf "L" Sprout + wordmark Ink.
-- **Pencarian global** (desktop ≥1024px): lebar 360px, input Ink-50. Di mobile menjadi ikon.
-- **XP pill, notifikasi, avatar** di kanan. Notifikasi dengan titik merah bila ada yang belum dibaca.
+- **Logo:** kotak 36px `radius-md` latar Ink dengan ikon diafragma Sprout + wordmark Ink.
+- **Tautan:** body-strong Ink-500; aktif = teks Ink + garis bawah 2px Sprout + `aria-current="page"`.
+- **Dasbor** hanya tampil setelah masuk. **Area Instruktur** tampil di dropdown akun untuk peran instruktur/admin.
 - **Belum masuk:** tombol Ghost "Masuk" + Primary "Daftar".
 
-### 9.2 Sidebar (desktop, lebar 264px)
-
-Sidebar berubah dari kartu putih mengambang menjadi **panel Ink** setinggi layar, sehingga hijau terlihat paling kuat di navigasi.
+### 9.2 Sidebar (khusus Area Instruktur & Admin, lebar 264px)
 
 ```
 ┌──────────────────────┐
-│  BELAJAR             │  ← overline Ink-300
-│  ▣ Dashboard         │  ← aktif: latar Slate, teks putih, ikon & garis kiri Sprout
-│  ▢ Kursus Saya       │
-│  ▢ Mentoring         │
+│  MENGAJAR            │  ← overline Ink-300
+│  ▣ Ringkasan         │  ← aktif: latar Slate, teks putih, ikon & garis kiri Sprout
+│  ▢ Kursus saya       │
+│  ▢ Siswa & nilai     │
 │                      │
-│  PROGRES             │
-│  ▢ Misi & Lencana    │
-│  ▢ Leaderboard       │
-│                      │
-│  KARIER              │
-│  ▢ Career Center     │
-│                      │
+│  ADMIN               │  ← hanya untuk peran admin
+│  ▢ Pengguna & peran  │
 │ ──────────────────── │
-│ ┌──────────────────┐ │
-│ │ 🔥 7 hari        │ │  ← mini kartu streak (Slate) + bar target mingguan
-│ │ ▓▓▓▓▓░░ 3/5      │ │
-│ └──────────────────┘ │
-│  ▢ Profil            │
-│  ▢ Pengaturan        │
+│  ← Kembali ke situs  │
 └──────────────────────┘
 ```
 
-- Item menu: tinggi 44px, `radius-md`, teks body-strong Ink-300; hover latar Slate 50%.
+- Panel Ink setinggi layar. Item menu: tinggi 44px, `radius-md`, teks body-strong Ink-300; hover latar Slate 50%.
 - Item aktif: latar Slate, teks putih, ikon Sprout, garis kiri 3px Sprout.
-- Menu dikelompokkan (Belajar · Progres · Karier) agar 8 item tidak terasa panjang.
-- **Tablet (768–1023px):** sidebar diciutkan menjadi 72px, hanya ikon dengan tooltip.
-- **Mobile (<768px):** sidebar diganti **bottom navigation** 5 item: Beranda, Kursus, Misi, Karier, Profil. Leaderboard dan Mentoring bisa diakses dari Dashboard dan menu "Lainnya".
+- **Tablet (768–1023px):** diciutkan menjadi 72px, hanya ikon dengan tooltip.
+- **Mobile (<768px):** sidebar menjadi drawer dari tombol menu.
 
-### 9.3 Kerangka halaman
+### 9.3 Navigasi mobile (publik & siswa)
+
+Bottom navigation 4 item: Kursus · Simulator · Analisis · Dasbor (atau "Masuk" bila belum masuk). Navbar atas tinggal logo + avatar.
+
+### 9.4 Kerangka halaman
 
 ```
 ┌ Navbar ───────────────────────────────────────────────┐
-├ Sidebar ┬ Breadcrumb (opsional)                       │
-│         │ Page Header: Judul h1 + deskripsi + aksi kanan│
-│         │ ───────────────────────────────────────────── │
-│         │ Konten (grid 12 kolom, gap 24px)              │
-│         │                                               │
-└─────────┴───────────────────────────────────────────────┘
+│ Breadcrumb (opsional)                                  │
+│ Page Header: Judul h1 + deskripsi + aksi kanan         │
+│ ────────────────────────────────────────────────────── │
+│ Konten (grid 12 kolom, gap 24px)                       │
+└────────────────────────────────────────────────────────┘
 ```
 
 - Padding konten: 40px desktop, 24px tablet, 16px mobile.
 - Jarak antar section: 32–48px.
-- Footer hanya muncul di halaman publik.
+- Footer hanya di halaman publik: nama proyek, keterangan tugas akhir (S1 Sistem Informasi, UPN "Veteran" Jakarta), tautan privasi.
 
 ---
 
-## 10. Struktur Dashboard
+## 10. Struktur Dasbor Siswa
 
-**Tujuan:** dalam 5 detik pengguna tahu (1) progres minggu ini, (2) apa yang harus dilanjutkan, (3) jadwal terdekat.
+**Tujuan:** dalam 5 detik siswa tahu (1) progres kursusnya, (2) apa yang harus dilanjutkan, (3) hasil latihan dan analisis terakhir.
 
 ### 10.1 Tata letak (desktop)
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
-│ A. Greeting                                   B. Target Mingguan      │
-│ Halo, Dewi! 👋                                ┌──────────────────────┐ │
-│ Senang melihatmu kembali…                     │ Target Mingguan  ✎   │ │
-│ [Lanjutkan: Day 3 – Auto Layout →] (Primary)  │ 3 / 5 materi  ▓▓▓░░  │ │
-│                                               │ Reset tiap Senin 60% │ │
-│                                               └──────────────────────┘ │
+│ A. Sapaan                                                            │
+│ Halo, Dewi. 👋                                                        │
+│ Terakhir kamu membuka "Shutter speed dan gerak".                      │
+│ [Lanjutkan materi →] (Primary)                                        │
 ├──────────────────────────────────────────────────────────────────────┤
-│ C. Ringkasan (3 kartu)                                                │
-│ ┌ Aktivitas Belajar ─────┐ ┌ Daily Streak ──┐ ┌ Level Belajar ──────┐ │
-│ │ 2 bootcamp aktif       │ │ 🔥 7 hari      │ │ Explorer · Lv 3      │ │
-│ │ UI/UX Design   ▓▓▓ 64% │ │ ●●●●●●○        │ │ 1.250 XP ▓▓▓░ →Lv 4  │ │
-│ │ Frontend       ▓░░ 20% │ │ Pertahankan!  →│ │                     →│ │
-│ └────────────────────────┘ └────────────────┘ └─────────────────────┘ │
-├───────────────────────────────────────────────┬──────────────────────┤
-│ D. Sesi Mentoring Mendatang     Semua jadwal →│ E. Career Center     │
-│ ┌──────────────────────────────────────────┐  │ (kartu Ink, aksen    │
-│ │ [12 MEI] LIVE ONLINE · 19:00 WIB          │  │  Sprout)            │
-│ │ Design System Fundamentals                │  │ Buka fitur →        │
-│ │ Mentor: Dewi Sartika       [Lihat Sesi]  │  ├──────────────────────┤
-│ └──────────────────────────────────────────┘  │ F. Top Players       │
-│ ┌──────────────────────────────────────────┐  │ #1 Ahmad   2.400 XP  │
-│ │ …                                         │  │ #2 Citra   2.150 XP  │
-│ └──────────────────────────────────────────┘  │ #3 Budi    1.980 XP  │
-│                                               │ ── #12 Kamu 1.250 XP │
-│ G. Misi Hari Ini (baru, ringkas)              │ Semua peringkat →    │
-│ ☐ Selesaikan 1 materi       +50 XP            │                      │
-│ ☑ Login hari ini            +10 XP            │                      │
-└───────────────────────────────────────────────┴──────────────────────┘
+│ B. Ringkasan (3 Stat Card)                                            │
+│ [Materi selesai 7/10] [Rata-rata nilai kuis 85] [Latihan lulus 3/5]   │
+├──────────────────────────────────────────────────────────────────────┤
+│ C. Kursus yang kamu ikuti                         Lihat katalog →    │
+│ ┌ Dasar Segitiga Exposure · Pemula ─────────────────── ▓▓▓▓▓░ 70% ┐ │
+│ │ Materi berikutnya: "Shutter speed dan gerak"       [Lanjutkan]   │ │
+│ └─────────────────────────────────────────────────────────────────┘ │
+├───────────────────────────────────┬──────────────────────────────────┤
+│ D. Kuis terakhir                  │ E. Latihan simulator terakhir     │
+│ Kuis aperture   90  Lulus         │ Bekukan mobil yang melaju  ✓ Lulus│
+│ Kuis ISO        60  Belum lulus   │ Blur latar pada potret     ✗      │
+├───────────────────────────────────┴──────────────────────────────────┤
+│ F. Analisis foto terakhir (Kartu Foto: thumbnail + setelan + 1 saran) │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 10.2 Spesifikasi blok
 
 | Blok | Isi | Aturan |
 |---|---|---|
-| **A. Greeting** | Sapaan h1 dengan nama depan, satu kalimat motivasi, **tombol "Lanjutkan"** ke materi terakhir | Tombol Lanjutkan adalah satu-satunya Primary di Dashboard. Sembunyikan bila belum ada bootcamp; ganti dengan "Cari Bootcamp" |
-| **B. Target Mingguan** | Judul + ikon edit, pill "3 / 5 materi", bar progres 12px, caption "Reset tiap Senin", persentase | Saat tercapai: pill Sukses, bar Hijau-500, teks "Goal tercapai 🎉" (animasi sekali). Edit membuka modal stepper 1–50 |
-| **C1. Aktivitas Belajar** | Jumlah bootcamp aktif, maks. 3 bootcamp dengan bar progres | Lebih dari 3 → tautan "Lihat semua". Kosong → empty state "Belum ada bootcamp aktif" + "Cari Bootcamp" |
-| **C2. Daily Streak** | Angka streak, 7 titik hari minggu ini | Seluruh kartu dapat diklik ke halaman Streak. Bila hari ini belum aktif: caption peringatan "Selesaikan 1 materi hari ini agar streak tidak putus" |
-| **C3. Level Belajar** | Nama level, total XP, bar ke level berikutnya | Klik ke halaman Level |
-| **D. Sesi Mentoring** | Maks. 3 sesi terdekat: blok tanggal (Mint, angka Hijau-800), label status, jam WIB, judul (sentence case), mentor, tombol Dark "Lihat Sesi" | Sesi sedang berlangsung naik ke atas dengan label LIVE dan tombol Primary "Gabung Sekarang" |
-| **E. Career Center** | Kartu Highlight Ink: ikon, judul, deskripsi singkat, tautan | Menggantikan kartu gradien oranye |
-| **F. Top Players** | 5 teratas + baris pengguna sendiri bila di luar 5 besar | Medali 1–3 sesuai §4.4 |
-| **G. Misi Hari Ini** | 2–3 misi harian dengan checkbox dan reward | Opsional tapi disarankan: memperkuat loop harian |
+| **A. Sapaan** | h1 dengan nama, kalimat konteks, tombol **"Lanjutkan materi"** ke materi terakhir yang belum selesai | Satu-satunya Primary di dasbor. Belum ikut kursus → ganti dengan "Cari kursus" |
+| **B. Ringkasan** | 3 Stat Card | Di mobile menjadi 1 baris geser horizontal atau 1 kolom |
+| **C. Kursus** | Semua kursus yang diikuti: judul, level, bar progres, materi berikutnya | Kursus 100% turun ke bawah dengan pill "Selesai". Kosong → empty state "Kamu belum mengikuti kursus" + "Jelajahi kursus" |
+| **D. Kuis terakhir** | Maks. 5 percobaan terakhir: nama kuis, nilai, status | Klik baris → halaman kuis |
+| **E. Latihan simulator** | Maks. 5 percobaan terakhir: nama latihan, status, tautan "Coba lagi" | Kosong → "Belum ada latihan" + "Buka simulator" |
+| **F. Analisis foto** | Kartu Foto terbaru: thumbnail (jika masih tersedia di browser), setelan, saran utama | Foto tidak disimpan di server; jika thumbnail tidak ada, tampilkan ikon gambar + setelan saja |
 
 ### 10.3 Urutan di mobile
 
-A (greeting + Lanjutkan) → B (target) → C2 streak & C3 level (2 kolom kecil) → D sesi → C1 aktivitas → G misi → F top players → E career center.
+A → C → B → D → E → F.
 
 ---
 
-## 11. Struktur Profil
+## 11. Halaman Belajar
 
-**Tujuan:** etalase pencapaian pengguna (untuk diri sendiri dan, ke depannya, untuk dibagikan ke rekruter). Profil **bukan** tempat mengubah password; itu pindah ke Pengaturan.
+### 11.1 Katalog Kursus (`/kursus`)
 
-### 11.1 Tata letak
+- Header: "Kursus" + deskripsi + pencarian & segmented control level (Semua · Pemula · Menengah · Mahir).
+- Grid kartu 3 kolom (Interactive): ilustrasi/sampul 16:9, pill level, judul h4, nama instruktur, jumlah modul & materi, deskripsi 2 baris.
+- Kursus yang sudah diikuti: pill "Diikuti" + bar progres menggantikan tombol "Lihat kursus".
+- Hanya kursus berstatus terbit yang tampil untuk siswa dan pengunjung.
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│ Profile Header (kartu, aksen pita Ink tipis di atas)              │
-│ (Avatar 112px)  Dewi Saputri                                     │
-│                 UI/UX Design · Batch 89 · Explorer               │
-│                 Bergabung Mei 2026                               │
-│                 [Edit Profil] (Secondary)  [Sertifikat Saya]     │
-├──────────────────────────────────────────────────────────────────┤
-│ Stat Row:  [★ Total XP 1.250] [🏆 Level Explorer] [🔥 Streak 7 hari] [📚 Kursus 2] │
-├──────────────────────────────────────────────────────────────────┤
-│ Tabs: Ringkasan · Pencapaian · Kursus · Sertifikat                │
-│                                                                  │
-│ (Ringkasan)                                                      │
-│ ┌ Bootcamp Berjalan ─────────────┐ ┌ Lencana Terbaru ───────────┐ │
-│ │ UI/UX Design      ▓▓▓▓░ 64%    │ │ [⚡][🔥][🔒] Lihat semua → │ │
-│ └────────────────────────────────┘ └────────────────────────────┘ │
-│ ┌ Aktivitas Terakhir ──────────────────────────────────────────┐  │
-│ │ • Menyelesaikan "Day 3 – Auto Layout"    +200 XP · 2 jam lalu │  │
-│ └──────────────────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────────────────┘
-```
+### 11.2 Detail Kursus (`/kursus/[courseId]`)
 
-### 11.2 Spesifikasi
-
-| Bagian | Aturan |
-|---|---|
-| **Avatar** | 112px, border putih 4px, inisial pada Mint bila tanpa foto. Klik → modal ganti foto (pratinjau, potong bulat, Simpan/Batal) |
-| **Identitas** | Nama h1; baris peran dinamis = jalur bootcamp + batch + level. Jangan tampilkan peran tetap |
-| **Aksi** | "Edit Profil" membuka **modal/drawer** berisi nama, foto, bio singkat. Hanya data publik. Pengaturan akun ada di halaman Pengaturan |
-| **Stat Row** | 4 Stat Card; di mobile jadi 2×2 |
-| **Tab Pencapaian** | Grid Badge Card 3 kolom (2 di tablet, 1 di mobile); urutan: terbuka terbaru → hampir terbuka (progres tertinggi) → terkunci |
-| **Tab Kursus** | List bootcamp: aktif & selesai, dengan progres dan tombol "Lanjutkan"/"Lihat Sertifikat" |
-| **Tab Sertifikat** | Kartu pratinjau sertifikat, tombol Unduh & Bagikan. Kosong → "Selesaikan bootcamp untuk membuka sertifikat" |
-
----
-
-## 12. Struktur Pengaturan (Settings)
-
-**Masalah saat ini:** pengaturan terbagi antara "Edit Profil" (tab Pengaturan Dasar & Keamanan) dan bagian terpisah untuk email, 2FA, dan sesi perangkat.
-**Keputusan:** satu halaman **Pengaturan** dengan navigasi kiri; setiap bagian berupa kartu dengan tombol simpan sendiri.
-
-### 12.1 Tata letak
-
-```
-┌──────────────────────────────────────────────────────────────────┐
-│ Pengaturan                                                       │
-│ Kelola akun, keamanan, dan preferensi belajarmu.                  │
-├──────────────┬───────────────────────────────────────────────────┤
-│ ▣ Akun       │ ┌ Informasi Dasar ─────────────────────────────┐  │
-│ ▢ Keamanan   │ │ Nama lengkap  [Dewi Saputri          ]       │  │
-│ ▢ Perangkat  │ │ Foto profil   (Avatar) [Ganti] [Hapus]       │  │
-│ ▢ Belajar    │ │                              [Simpan perubahan]│ │
-│ ▢ Notifikasi │ └──────────────────────────────────────────────┘  │
-│              │ ┌ Alamat Email ────────────────────────────────┐  │
-│ ──────────── │ │ dewi@email.com                    [Ubah email]│  │
-│ ▢ Zona Bahaya│ └──────────────────────────────────────────────┘  │
-└──────────────┴───────────────────────────────────────────────────┘
-```
-
-- Navigasi kiri 220px, item aktif latar Mint + teks Ink + garis kiri Sprout. Di mobile menjadi daftar menu; tiap item membuka halaman bagiannya.
-- Konten maks. 640px, kartu bertumpuk dengan jarak 24px.
-- Setiap kartu: judul h3, deskripsi singkat Ink-500, isi, footer dengan tombol simpan rata kanan.
-- Tombol simpan **nonaktif** sampai ada perubahan; muncul toast setelah berhasil.
-- Bila pengguna pindah bagian dengan perubahan belum disimpan → modal "Buang perubahan?".
-
-### 12.2 Isi tiap bagian
-
-**A. Akun**
-| Kartu | Isi |
-|---|---|
-| Informasi Dasar | Nama lengkap, foto profil |
-| Alamat Email | Email saat ini + "Ubah email" → field email baru + konfirmasi password + info "Verifikasi mungkin diperlukan". **Akun Google:** field terkunci + banner Info "Email terhubung dengan Google dan dikelola oleh Google" |
-
-**B. Keamanan**
-| Kartu | Isi |
-|---|---|
-| Status Keamanan | Ringkasan: metode masuk (Email/Google), status 2FA. Badge Sukses "Proteksi ganda aktif" atau Peringatan "2FA belum aktif" |
-| Ubah Password | Password lama, password baru (dengan indikator kekuatan), konfirmasi. **Akun Google:** diganti banner "Keamanan dikelola oleh Google" |
-| Autentikasi Dua Faktor (2FA) | Nonaktif → tombol Primary "Aktifkan 2FA" → alur 3 langkah (lihat §15.6). Aktif → status, "Lihat kode cadangan", tombol Danger-ghost "Matikan 2FA" dengan modal konfirmasi |
-
-**C. Perangkat (Sesi Browser Aktif)**
-- List perangkat: ikon (laptop/ponsel), nama peramban & OS, lokasi perkiraan, waktu terakhir aktif. Perangkat ini ditandai pill Sukses "Perangkat ini".
-- Tombol Dark "Keluar dari sesi lain" → modal konfirmasi destruktif dengan verifikasi sesuai jenis akun (password / kode 2FA / konfirmasi Google).
-
-**D. Belajar (Preferensi)**
-- Target mingguan (stepper, sama dengan modal di Dashboard; satu sumber data).
-- Pengingat harian streak (toggle + pilihan jam).
-
-**E. Notifikasi**
-- Toggle per kategori: sesi mentoring akan dimulai, misi baru, naik level, pengumuman bootcamp. Kanal: email / dalam aplikasi.
-
-**F. Zona Bahaya**
-- Kartu border merah lembut: "Hapus akun" dengan penjelasan konsekuensi, tombol Danger, modal yang meminta pengguna mengetik ulang email.
-
-> Bagian D, E, F adalah usulan perluasan. A, B, C sudah ada di project dan hanya disatukan.
-
----
-
-## 13. Halaman Produk Lainnya
-
-### 13.1 Katalog Bootcamp (publik & peserta)
-- Header: "Katalog Bootcamp" + deskripsi + pencarian & filter (kategori, level kesulitan).
-- Grid kartu 3 kolom: thumbnail 16:9 (`radius-lg` di dalam kartu), kategori, judul h4, mentor, durasi, jumlah materi, XP total, tombol "Lihat Detail".
-- Kartu bootcamp yang sudah diikuti: pill "Terdaftar" + bar progres menggantikan harga/aksi.
-
-### 13.2 Detail Bootcamp
 ```
 ┌ Hero (kartu Ink) ─────────────────────────────────────────────┐
-│ Kategori · Level   Judul bootcamp (h1, putih)                  │
-│ Deskripsi singkat (Ink-300)   Mentor · Durasi · Materi          │
-│ [Daftar Bootcamp] / [Lanjutkan Belajar] (Primary)               │
+│ Pemula · 3 modul · 10 materi                                   │
+│ Dasar Segitiga Exposure (h1, putih)                             │
+│ Deskripsi singkat (Ink-300) · Instruktur                        │
+│ [Mulai kursus] / [Lanjutkan materi] (Primary)                    │
 ├──────────────────────────────────────┬────────────────────────┤
-│ Kurikulum (accordion per hari)       │ Progres Bootcamp (ring) │
-│  Day 1  Intro…   ✓  45 menit  +200 XP │ Statistik Kamu          │
-│  Day 2  …        ●                   │  Total waktu · XP ·      │
-│  Day 3  …        🔒                  │  Sertifikat (terkunci)   │
+│ Daftar isi (accordion per modul)     │ Progres kursus (ring)   │
+│  Modul 1  Cahaya dan exposure         │ 7 dari 10 materi        │
+│   ✓ Apa itu exposure                  │ Kuis lulus 2 dari 3     │
+│   ● Aperture         [Latihan]        │                         │
+│   ○ Kuis aperture    [Kuis]           │                         │
 └──────────────────────────────────────┴────────────────────────┘
 ```
-Panel kanan menempel saat scroll (desktop).
 
-### 13.3 Halaman Materi (Lesson / Day Material)
+- Materi yang terhubung latihan simulator diberi pill "Latihan simulator"; materi yang punya kuis diberi pill "Kuis".
+- Panel kanan menempel saat scroll (desktop); di mobile pindah ke atas daftar isi sebagai bar ringkas.
+
+### 11.3 Halaman Materi (`/kursus/[courseId]/lesson/[lessonId]`)
+
 ```
-┌ Breadcrumb: Kursus Saya › UI/UX Design › Day 3 ─────────────────┐
+┌ Breadcrumb: Kursus › Dasar Segitiga Exposure › Aperture ───────┐
 ├──────────────────────────────────────────┬─────────────────────┤
-│ Pemutar video 16:9 (`radius-xl`)          │ Kurikulum Hari Ini  │
-│ Judul materi (h2) · durasi · +XP          │  ✓ Video intro      │
-│ Tabs: Ringkasan · Catatan · Transkrip ·   │  ● Latihan (Wajib)  │
-│       Playground · Tugas                  │  ○ Quiz             │
-│ Konten tab                                │ Progres hari ini ▓▓░│
-│                                           │                     │
-│ [← Sebelumnya]   [Tandai Selesai & Lanjut →] (Primary)          │
+│ Judul materi (h1) · Modul 1              │ Daftar materi modul │
+│ Isi Markdown (body-lg, maks. 68ch)        │  ✓ Apa itu exposure │
+│                                           │  ● Aperture         │
+│ ┌ Kartu Highlight: Coba di simulator ───┐ │  ○ Kuis aperture    │
+│ │ Latihan: Blur latar pada potret        │ │                     │
+│ │ [Buka latihan] (Dark)                  │ │                     │
+│ └────────────────────────────────────────┘ │                     │
+│ [← Sebelumnya]   [Tandai selesai & lanjut →] (Primary)          │
 └──────────────────────────────────────────┴─────────────────────┘
 ```
-- **Playground:** dua panel (editor | pratinjau hasil), toolbar dengan tab bahasa dan tombol "Jalankan".
-- **Tugas:** instruksi, tenggat, dropzone (PDF), status kiriman (Belum dikirim / Menunggu penilaian / Dinilai).
-- Selesai materi → toast "+200 XP" dan langsung tawarkan materi berikutnya.
-- Kosong: "Belum ada catatan untuk materi ini", "Transkrip sedang disiapkan" memakai empty state ringkas.
 
-### 13.4 Kursus Saya
-Header + tab (Berjalan · Selesai). Kartu horizontal: thumbnail, judul, progres, materi terakhir, tombol "Lanjutkan". Kosong: ilustrasi + "Kamu belum mendaftar di bootcamp manapun" + "Jelajahi Bootcamp".
+- Kartu "Coba di simulator" muncul hanya jika materi punya `simulator_exercise_id`; tombolnya membuka `/simulator?latihan=...`.
+- Jika materi punya kuis, tombol Primary di bawah menjadi "Kerjakan kuis".
+- Menandai selesai → toast "Materi ditandai selesai", titik di daftar materi menjadi centang, lalu pindah ke materi berikutnya.
+- Belum masuk → tombol Primary diganti "Masuk untuk menyimpan progres".
 
-### 13.5 Misi & Lencana (Mission Center)
-- Ringkasan atas: 2 Stat Card (Total XP misi, Lencana didapat "8 / 24").
-- Tabs: Harian · Mingguan · Spesial. Mission Card dalam list, misi selesai turun ke bawah.
-- Panel kanan: kartu Soft "Tips Misi".
-- Bagian lencana: grid Badge Card (sama dengan Profil).
+### 11.4 Kuis (`/kursus/[courseId]/kuis/[quizId]`)
 
-### 13.6 Leaderboard (Peringkat Global)
-- Header + segmented control periode.
-- **Podium** 3 teratas (kartu medali, avatar 64px).
-- Tabel/list peringkat 4+ dengan pencarian pemain.
-- Baris "Kamu" dipin.
-- Klik pemain → **drawer profil ringkas**: avatar, level, total XP, streak, jalur evolusi (stepper), status online.
-
-### 13.7 Level (Status Karakter)
-- Kartu Highlight Ink: ilustrasi evolusi saat ini, nama level, ring progres, "XP dibutuhkan untuk level berikutnya".
-- **Evolution Roadmap**: slider horizontal kartu level (terbuka = Mint, aktif = border Sprout, terkunci = abu + gembok).
-- Saat level maksimum: banner Sukses "Evolusi maksimum tercapai".
-
-### 13.8 Streak
-- Angka streak `display` di tengah + ikon api Sprout di kartu Ink.
-- Kalimat: "Jangan biarkan apimu padam. Selesaikan satu materi setiap hari."
-- Kalender aktivitas minggu ini (7 lingkaran) + riwayat bulanan (grid kecil seperti heatmap Mint → Hijau-600).
-- Banner Peringatan bila hari ini belum aktif, dengan tombol "Lanjutkan materi".
-
-### 13.9 Mentoring
-- **Jadwal Mentoring:** banner Soft "Upgrade skill bersama mentor terbaik", list/tabel sesi (Jadwal · Informasi Sesi · Aksi). Filter: Mendatang · Selesai.
-- **Detail Sesi:** breadcrumb, judul, mentor (avatar + peran), grid info (Tanggal · Jam WIB · Status), detail pembahasan, tombol "Gabung" (aktif 10 menit sebelum mulai) atau "Tambahkan ke kalender".
-- **Live Mentoring:**
-  ```
-  ┌──────────────────────────────────────┬─────────────────┐
-  │ Video live (LIVE badge, penonton)    │ Live Chat       │
-  │ Kontrol: putar · volume · kualitas · │ pesan…          │
-  │ layar penuh                          │ reaksi 😊       │
-  │ Judul sesi · Mentor                  │ [Tulis pesan…]  │
-  ├──────────────────────────────────────┤                 │
-  │ Misi Harian (sesi)  ·  Top Leaderboard│                │
-  └──────────────────────────────────────┴─────────────────┘
-  ```
-  Reward menonton ("Kamu mendapat +10 XP ✨") memakai toast, bukan pop-up yang menutup video. Di mobile chat menjadi drawer bawah.
-
-### 13.10 Career Center
-```
-┌ Talent License (kartu Ink) ───────────────────────────────────┐
-│ UI/UX Designer – Batch 89   Level 1 – Novice Learner           │
-│ Next goal: Level 7  ▓░░░░ 30 / 150 XP                          │
-│ Milestone: Lv1 ● ── Lv5 ○ ── Lv7 ○   "Kamu akan mendapatkan…"   │
-├───────────────────────────────────────────────────────────────┤
-│ Readiness: [Project] [Bot Interview] [CV Score] [Engagement]   │ ← 4 Stat Card dengan ring
-├───────────────────────────────────────────────────────────────┤
-│ Career Tools: [CV Analyzer] [Bot Interview] [Final Project]     │ ← kartu Interactive
-├───────────────────────────────────────────────────────────────┤
-│ Rekomendasi Pekerjaan  — terkunci: overlay blur + gembok +      │
-│ "Tingkatkan CV Score untuk membuka peluang kerja premium"       │
-└───────────────────────────────────────────────────────────────┘
-```
-
-- **CV Analyzer:** langkah 1 dropzone → langkah 2 memindai (progres) → langkah 3 hasil: ring skor /100, jumlah masalah, bar per kategori (Kualitas Konten, Kelengkapan Bagian), lalu accordion per kriteria (Keterbacaan ATS, Dampak Terukur, Variasi Kata Kerja, Ejaan & Tata Bahasa) dengan label penilaian:
-  | Label | Gaya |
-  |---|---|
-  | Sangat baik | Sukses |
-  | Baik | Info |
-  | Perlu diperbaiki | Peringatan |
-  | Kurang | Bahaya |
-  Saran ejaan ditampilkan sebagai pasangan "salah → benar" yang bisa diterima satu per satu.
-- **Bot Interview:** 3 tahap.
-  1. *Persiapan* — pratinjau kamera, uji mikrofon (bar level suara Sprout), pilih kamera/mikrofon, pilih role, bahasa, jenis wawancara, tingkat kesulitan (chip). Tombol Primary "Mulai Interview".
-  2. *Wawancara* — video pengguna + avatar pewawancara, indikator "sedang berbicara", timer, tombol akhiri (Danger).
-  3. *Evaluasi* — status "Menyusun evaluasi…" (skeleton), lalu ringkasan skor, kekuatan, area perbaikan, transkrip.
-- **Final Project:** dropzone + riwayat kiriman + status penilaian.
-
-### 13.11 Halaman publik
-- **Beranda:** hero (judul display, subjudul, CTA "Daftar Sekarang" Primary + "Lihat Bootcamp" Secondary), katalog jalur karier, keunggulan Learnify, testimoni alumni ("Kata Mereka"), FAQ (accordion), CTA penutup di kartu Ink. Gradien ungu-biru animatif diganti latar Ink dengan bentuk organik Sprout/Mint samar.
-- **Tentang:** misi, metode belajar (Project Based Learning · Mentoring Intensif · Career Support) dalam 3 kartu, lokasi kantor & kontak.
-- **Kebijakan Privasi:** halaman baca 720px, daftar isi melayang di kiri.
-
-### 13.12 Autentikasi
-- Layout dua kolom (desktop): kiri panel Ink dengan ilustrasi + kutipan alumni; kanan form 440px. Mobile: form saja dengan logo di atas.
-- **Masuk:** email, password (tampil/sembunyi), "Lupa password?", tombol Primary "Masuk", pemisah "atau masuk dengan", tombol Secondary Google, tautan "Belum punya akun? Daftar".
-- **Daftar:** nama, email, password + indikator kekuatan, konfirmasi, persetujuan kebijakan, Primary "Buat Akun", opsi Google.
-- **Lupa / Reset password:** satu field per layar, layar konfirmasi "Cek email kamu" dengan ilustrasi.
-- **Verifikasi 2FA:** input OTP 6 kotak, "Gunakan kode cadangan", tautan kembali.
+- Header: judul kuis, jumlah soal, ambang lulus ("Lulus minimal 70").
+- Satu soal per layar di mobile; di desktop boleh semua soal dalam satu halaman dengan nomor yang jelas.
+- Tombol "Kirim jawaban" nonaktif sampai semua soal terjawab; caption "3 dari 5 soal terjawab".
+- Setelah kirim → komponen Hasil Kuis (§8.14) + riwayat percobaan di bawahnya.
+- Lulus → banner Soft "Kuis lulus 🎉" sekali. Belum lulus → banner Info yang menautkan kembali ke materi terkait, bukan bahasa yang menyalahkan.
 
 ---
 
-## 14. Area Admin
+## 12. Simulator Kamera
 
-Admin memakai shell yang sama, namun sidebar menampilkan menu admin dan label "Admin" pada navbar.
+**Tujuan:** siswa melihat langsung akibat setiap setelan pada exposure, blur, dan noise.
+
+### 12.1 Tata letak (desktop)
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│ Simulator kamera (h1)          Kondisi cahaya: [Terik|Berawan|Senja|Malam] │
+├────────────────────────────────────────────┬─────────────────────────┤
+│ ┌ Zona foto ────────────────────────────┐  │ APERTURE      f/5.6     │
+│ │                                        │  │ ├┼┼┼┼┼●┼┼┼┼┼┤          │
+│ │        Pratinjau (3:2)                 │  │ SHUTTER       1/250     │
+│ │                                        │  │ ├┼┼┼┼┼┼┼●┼┼┼┤          │
+│ │ f/5.6 · 1/250 · ISO 200 · 50 mm   ⏸ ⛶ │  │ ISO           ISO 200   │
+│ └────────────────────────────────────────┘  │ FOCAL LENGTH  50 mm     │
+│ Exposure Meter  −3 ··· ● ··· +3   0 EV ✓    │ [ ] Tripod              │
+│ Petunjuk: shutter tepat untuk f/5.6 ISO 200 │                         │
+│ adalah 1/250.                               │                         │
+├────────────────────────────────────────────┴─────────────────────────┤
+│ Latihan terpandu: 5 Kartu Latihan (Interactive), latihan aktif ditandai │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+### 12.2 Aturan
+
+- Pratinjau dan meter adalah satu kesatuan; meter selalu terlihat tanpa scroll di desktop.
+- Dial memakai nilai standar kamera (sepertiga stop) dan dapat digeser dengan keyboard.
+- **Latihan aktif** (dari `?latihan=` atau dipilih dari daftar): kartu latihan menempel di atas panel setelan, kriteria dicentang secara langsung saat setelan berubah, tombol Primary "Ambil foto" mengunci hasil dan mencatat percobaan.
+- Latihan lulus → toast "Latihan lulus 🎉" + tautan "Kembali ke materi" bila datang dari materi.
+- Tanpa akun → banner Info sekali per sesi: "Hasil latihan disimpan di browser ini. Masuk untuk menyimpannya ke akunmu."
+
+### 12.3 Mobile
+
+Pratinjau di atas (lebar penuh), meter tepat di bawahnya, setelan dalam tab ringkas (Aperture · Shutter · ISO · Lainnya) di bawah meter, sehingga pratinjau dan dial yang sedang diubah terlihat bersamaan.
+
+---
+
+## 13. Analisis Foto
+
+**Tujuan:** siswa memahami mengapa fotonya terlalu gelap, terang, atau kabur, dan setelan apa yang sebaiknya dicoba.
+
+### 13.1 Alur layar
+
+1. **Unggah** — dropzone (§8.2) + catatan privasi: "Foto diproses di browsermu dan tidak dikirim ke server. Data lokasi GPS tidak dibaca."
+2. **Memproses** — progres singkat "Membaca EXIF… · Mengukur piksel…".
+3. **Hasil**:
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│ ┌ Zona foto ─────────────────────┐  Ringkasan                         │
+│ │  Foto (fit, tidak dipotong)     │  f/1.8 · 1/30 · ISO 200 · 85 mm    │
+│ │                                 │  Canon EOS R6 · RF 85mm F2         │
+│ └─────────────────────────────────┘  Status: Kurang ⅔ stop ↓          │
+│                                      Ketajaman: Perlu dicek            │
+├──────────────────────────────────────────────────────────────────────┤
+│ Tabs: Saran · Histogram · Data EXIF · Mengapa saran ini muncul       │
+│ (Saran) Kartu Saran #1, #2, …                                         │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+### 13.2 Aturan
+
+- Saran diurutkan dari dampak terbesar. Saran yang bergantung pada maksud fotografer ditulis bersyarat ("Jika ini foto potret, latar bisa lebih kabur dengan f/2").
+- Skor ketajaman dan warna dominan diberi label "perkiraan".
+- **EXIF tidak ada** → banner Peringatan "Foto ini tidak memiliki data EXIF (biasanya dari WhatsApp atau screenshot). Saran berbasis histogram tetap ditampilkan." + form setelan manual.
+- **EXIF sebagian** → aturan yang datanya kurang tampil "Dilewati" di tabel jejak, dengan alasan.
+- **Foto ponsel** → caption "Aperture ponsel umumnya tetap, jadi saran aperture tidak ditampilkan."
+- **Format tidak bisa ditampilkan** (mis. HEIC di Chrome) → zona foto menampilkan ikon + "Pratinjau tidak tersedia di browser ini"; data EXIF tetap ditampilkan.
+- Tombol Primary di akhir: "Analisis foto lain". Kartu Saran memberi aksi sekunder "Coba di simulator".
+
+---
+
+## 14. Halaman Publik & Autentikasi
+
+### 14.1 Beranda (`/`)
+- Hero: judul `display` ("Pahami exposure dengan memotret, bukan menghafal"), subjudul, CTA Primary "Coba simulator" + Secondary "Lihat kursus", ilustrasi kamera/diafragma di kanan.
+- Tiga kartu fitur sesuai pilar: Kursus · Simulator kamera · Analisis foto, masing-masing dengan tautan.
+- Bagian "Cara kerja": Pahami → Coba → Terapkan → Ukur (stepper horizontal).
+- CTA penutup di kartu Ink: "Daftar gratis untuk menyimpan progresmu".
+
+### 14.2 Autentikasi (`/masuk`, `/daftar`)
+- Layout dua kolom (desktop): kiri panel Ink dengan ilustrasi + satu kalimat manfaat; kanan form 440px. Mobile: form saja dengan logo di atas.
+- **Masuk:** email, password (tampil/sembunyi), tombol Primary "Masuk", tautan "Belum punya akun? Daftar".
+- **Daftar:** nama, email, password + indikator kekuatan, tombol Primary "Buat akun", tautan "Sudah punya akun? Masuk". Akun baru otomatis berperan siswa.
+- Supabase belum dikonfigurasi → kartu Info berisi petunjuk konfigurasi (bukan form yang rusak), dengan tautan ke Simulator dan Analisis yang tetap bisa dipakai.
+- Lupa password dan masuk dengan Google **belum ada**; tambahkan pola ini hanya bila fiturnya dibuat.
+
+---
+
+## 15. Area Instruktur & Admin
+
+Area ini adalah **prioritas pengembangan berikutnya** di README (dasbor instruktur dan editor kursus). Halaman ini memakai sidebar Ink (§9.2).
 
 | Menu | Isi utama |
 |---|---|
-| **Ringkasan** | 4 Stat Card (Total Siswa, Kursus Aktif, Materi Selesai, Pendapatan) + grafik aktivitas + daftar aktivitas terbaru |
-| **Pengguna** | Pencarian, filter status; tabel Siswa · Aktivitas Terakhir · Status · Aksi; aksi "Ban/Buka ban" dengan modal konfirmasi |
-| **Kursus** | Pohon konten: Bootcamp → Hari → Materi (Video, Quiz, PDF, Template); tombol "Tambah Kursus" membuka form multi-langkah |
-| **Sesi** | Daftar sesi mentoring + form jadwal baru |
-| **Misi** | Tabel Nama Misi · Kategori · Aktivitas · Target · Reward · Tanggal · Status · Aksi; form "Tambah Misi" (nama, kategori, deskripsi, jenis aktivitas, target & satuan, reward XP) |
+| **Ringkasan** | 4 Stat Card (Siswa terdaftar, Kursus terbit, Materi diselesaikan minggu ini, Rata-rata nilai kuis) + daftar aktivitas siswa terbaru |
+| **Kursus saya** | Tabel kursus: Judul · Level · Status (Draf/Terbit) · Siswa · Diperbarui · Aksi. Tombol Primary "Buat kursus" |
+| **Editor kursus** | Pohon konten kiri: Kursus → Modul → Materi (+ Kuis). Panel kanan: form item terpilih. Urutan bisa diubah dengan seret atau tombol naik/turun |
+| **Editor materi** | Judul, editor Markdown dengan pratinjau, select "Latihan simulator terkait" (opsional, dari daftar latihan) |
+| **Editor kuis** | Judul, ambang lulus (0–100), daftar soal; tiap soal punya opsi dengan satu/lebih penanda benar |
+| **Siswa & nilai** | Filter kursus; tabel Siswa · Progres materi · Nilai kuis terbaik · Latihan lulus · Aktivitas terakhir. Klik baris → drawer detail siswa (riwayat kuis dan latihan) |
+| **Pengguna & peran** (admin) | Pencarian; tabel Nama · Email · Peran · Bergabung; ubah peran lewat select + modal konfirmasi |
 
-**Aturan admin:**
+**Aturan:**
 - Kepadatan lebih tinggi: padding kartu 20px, baris tabel 52px.
+- Kursus baru selalu berstatus **Draf**. "Terbitkan" (Dark) memakai modal konfirmasi yang menyebut jumlah modul & materi.
+- Tombol simpan nonaktif sampai ada perubahan; pindah item dengan perubahan belum disimpan → modal "Buang perubahan?".
+- Menghapus modul/materi/kuis selalu lewat modal konfirmasi destruktif yang menyebut isi yang ikut terhapus.
 - Grafik memakai Sprout (seri utama), Slate (seri pembanding), Ink-200 (grid).
-- Semua aksi destruktif melalui modal konfirmasi; aksi massal menampilkan jumlah item terpilih.
-- Status aktif/nonaktif memakai toggle, bukan teks.
+- Penilaian kuis dan kunci jawaban **tidak boleh** dikirim ke browser siswa (lihat roadmap); UI siswa hanya menerima hasil dari server.
 
 ---
 
-## 15. Alur End-to-End
+## 16. Alur End-to-End
 
-### 15.1 Peta besar perjalanan peserta
+### 16.1 Peta besar perjalanan siswa
 
 ```
-Pengunjung ─▶ Beranda ─▶ Katalog ─▶ Detail Bootcamp ─▶ Daftar akun
-                                                        │
-                                                        ▼
-                         Onboarding singkat (pilih jalur, target mingguan)
-                                                        │
-                                                        ▼
-       ┌────────────── Dashboard (pusat) ◀──────────────────────────┐
-       │                    │                                       │
-       ▼                    ▼                                       │
-  Materi harian ─▶ Selesai ─▶ +XP, streak, misi, progres ───────────┤
-       │                                                           │
-       ▼                                                           │
-  Mentoring (jadwal ─▶ live) ─▶ +XP ───────────────────────────────┤
-       │                                                           │
-       ▼                                                           │
-  Bootcamp selesai ─▶ Sertifikat ─▶ Career Center                  │
-                                     (CV Analyzer ─▶ Bot Interview  │
-                                      ─▶ Final Project) ─▶ Talent    │
-                                      License naik ─▶ Rekomendasi    │
-                                      pekerjaan terbuka ────────────┘
+Pengunjung ─▶ Beranda ─▶ Coba Simulator / Analisis (tanpa akun)
+                 │
+                 ▼
+            Katalog Kursus ─▶ Detail Kursus ─▶ Daftar akun ─▶ Mulai kursus
+                                                                 │
+       ┌──────────────────── Dasbor (pusat) ◀────────────────────┤
+       │                                                         │
+       ▼                                                         │
+  Materi ─▶ Coba di simulator (latihan) ─▶ Kembali ke materi ────┤
+       │                                                         │
+       ▼                                                         │
+  Kuis ─▶ Lulus? ── tidak ─▶ ulang materi terkait ───────────────┤
+       │ ya                                                      │
+       ▼                                                         │
+  Materi berikutnya … ─▶ Kursus selesai ─▶ Analisis foto sendiri ─┘
 ```
 
-### 15.2 Registrasi & onboarding
+### 16.2 Mulai belajar
 
-| Langkah | Layar | Kriteria UX |
-|---|---|---|
-| 1 | Daftar (email atau Google) | ≤ 4 field; error inline |
-| 2 | Verifikasi email (bila bukan Google) | Layar "Cek email kamu" + kirim ulang (cooldown 60 detik) |
-| 3 | Onboarding 1/3 — pilih jalur karier | Kartu pilihan besar, bisa dilewati |
-| 4 | Onboarding 2/3 — atur target mingguan | Stepper, default 5 materi, penjelasan singkat |
-| 5 | Onboarding 3/3 — kenalan gamifikasi | 3 poin: XP, streak, level |
-| 6 | Dashboard dengan state "pengguna baru" | Greeting + CTA "Mulai materi pertama" + checklist awal (Lengkapi profil, Ikuti bootcamp, Selesaikan materi pertama) |
+1. Katalog → Detail Kursus → **Mulai kursus** (belum masuk → ke `/masuk`, lalu kembali ke detail kursus).
+2. Hero berubah menjadi "Lanjutkan materi" → materi pertama.
+3. Baca materi → (bila ada) **Coba di simulator** → latihan lulus → kembali ke materi.
+4. **Tandai selesai & lanjut** → toast, daftar materi tercentang, bar progres bergerak.
+5. Materi berkuis → **Kerjakan kuis** → hasil → lanjut atau ulangi.
+6. Semua materi selesai → layar "Kursus selesai" (ilustrasi + ringkasan nilai) + ajakan "Analisis foto milikmu".
 
-### 15.3 Mendaftar & belajar
+### 16.3 Latihan simulator
 
-1. Katalog → Detail Bootcamp → **Daftar Bootcamp** → modal konfirmasi singkat → toast "Kamu terdaftar di UI/UX Design".
-2. Hero berubah menjadi "Lanjutkan Belajar" → materi Day 1.
-3. Menonton/membaca → tab Tugas bila ada → **Tandai Selesai**.
-4. Umpan balik: toast XP, titik kurikulum berubah centang, bar progres hari bergerak.
-5. Bila target mingguan tercapai → banner perayaan sekali di Dashboard.
-6. Bila naik level → Level Up Modal.
-7. Semua hari selesai → layar "Bootcamp selesai" + sertifikat + CTA ke Career Center.
+Buka latihan → baca tujuan & kriteria → atur dial sambil melihat kriteria tercentang → **Ambil foto** → hasil lulus/belum per kriteria → coba lagi atau kembali ke materi. Percobaan tercatat (akun atau browser).
 
-### 15.4 Loop harian (retensi)
+### 16.4 Analisis foto
 
-Notifikasi pengingat → buka aplikasi → Dashboard menampilkan streak + misi hari ini → "Lanjutkan" → selesai materi → misi tercentang → streak bertambah → Leaderboard posisi naik (indikator ▲ di Top Players).
+Unggah → proses → lihat status exposure → baca saran → (opsional) buka tab "Mengapa saran ini muncul" → **Coba di simulator** dengan setelan saran → "Analisis foto lain". Metrik (bukan file foto) tersimpan bila sudah masuk.
 
-### 15.5 Mentoring
+### 16.5 Instruktur
 
-Dashboard/Jadwal → Detail Sesi → (H-10 menit) tombol "Gabung" aktif, label LIVE → Live Mentoring → chat & reaksi → reward XP via toast → sesi berakhir → layar ringkasan (rekaman bila ada, materi pendukung).
+Masuk → Area Instruktur › Ringkasan → Kursus saya → **Buat kursus** (Draf) → tambah modul → tambah materi (Markdown, tautkan latihan) → tambah kuis → pratinjau sebagai siswa → **Terbitkan** → pantau di Siswa & nilai.
 
-### 15.6 Profil & Pengaturan
+### 16.6 Admin
 
-**Ubah profil:** Profil → Edit Profil (drawer) → ganti nama/foto → pratinjau → Simpan → toast + header profil langsung berubah.
-
-**Ubah password:** Pengaturan › Keamanan → isi 3 field → Simpan → toast "Password diperbarui" → opsi "Keluar dari sesi lain sekarang?".
-
-**Aktifkan 2FA:**
-1. Pengaturan › Keamanan → "Aktifkan 2FA".
-2. Modal langkah 1/3: pindai kode QR dengan aplikasi authenticator (+ kode manual).
-3. Langkah 2/3: masukkan kode 6 digit (input OTP).
-4. Langkah 3/3: tampilkan kode cadangan, tombol "Salin" & "Unduh", checkbox "Saya sudah menyimpan kode".
-5. Selesai → status kartu menjadi "Proteksi ganda aktif".
-
-**Kelola perangkat:** Pengaturan › Perangkat → tinjau daftar → "Keluar dari sesi lain" → verifikasi → daftar menyisakan "Perangkat ini" + toast.
-
-**Login dengan 2FA:** Masuk → layar Verifikasi Keamanan (OTP) → Dashboard. Salah 3 kali → pesan penjelas + tautan kode cadangan.
-
-### 15.7 Persiapan karier
-
-Career Center → lihat readiness (4 indikator) → **CV Analyzer** (unggah → skor → perbaiki → unggah ulang) → **Bot Interview** (persiapan perangkat → wawancara → evaluasi) → **Final Project** (unggah → dinilai) → Talent License naik level → kartu **Rekomendasi Pekerjaan** terbuka (animasi gembok terbuka sekali).
-
-### 15.8 Admin
-
-Masuk sebagai admin → Ringkasan → Pengguna (cari → tinjau → ban/buka ban) → Kursus (tambah bootcamp → tambah hari → tambah materi) → Misi (tambah misi → atur target & reward → aktifkan) → Sesi (jadwalkan sesi).
+Masuk → Pengguna & peran → cari pengguna → ubah peran menjadi Instruktur → konfirmasi → toast "Peran diperbarui".
 
 ---
 
-## 16. State: Loading, Kosong, Error, Sukses
+## 17. State: Loading, Kosong, Error, Sukses
 
 | State | Pola | Contoh teks |
 |---|---|---|
 | **Loading awal** | Skeleton berbentuk konten | — |
-| **Loading aksi** | Tombol loading, form tidak bisa dikirim ganda | "Menyimpan…", "Memproses…" |
-| **Loading lama** (> 3 detik) | Progres + penjelasan | "Memindai CV kamu…", "Menyusun evaluasi wawancara…" |
-| **Kosong — pertama kali** | Ilustrasi + ajakan | "Belum ada bootcamp aktif. Yuk mulai perjalananmu." [Cari Bootcamp] |
-| **Kosong — hasil filter** | Teks + reset | "Tidak ada siswa ditemukan." [Hapus filter] |
-| **Error memuat** | Kartu error + coba lagi | "Profil gagal dimuat. Periksa koneksi lalu coba lagi." [Coba lagi] |
-| **Error form** | Inline per field + ringkasan di atas form bila > 2 error | "Password lama tidak sesuai." |
-| **Tanpa akses / terkunci** | Overlay blur + gembok + syarat membuka | "Capai CV Score 70 untuk membuka rekomendasi pekerjaan." |
-| **Sukses** | Toast; untuk pencapaian besar gunakan modal perayaan | "Profil berhasil diperbarui." |
+| **Loading aksi** | Tombol loading, form tidak bisa dikirim ganda | "Menyimpan…", "Mengirim jawaban…" |
+| **Loading lama** (> 3 detik) | Progres + penjelasan | "Membaca EXIF…", "Mengukur piksel foto…" |
+| **Kosong — pertama kali** | Ilustrasi + ajakan | "Kamu belum mengikuti kursus." [Jelajahi kursus] |
+| **Kosong — hasil filter** | Teks + reset | "Tidak ada kursus untuk level ini." [Tampilkan semua] |
+| **Data tidak lengkap** | Banner Peringatan + jalan keluar | "Foto ini tidak memiliki data EXIF. Isi setelan secara manual untuk saran yang lebih lengkap." |
+| **Belum dikonfigurasi** | Kartu Info + petunjuk | "Fitur akun belum aktif. Isi NEXT_PUBLIC_SUPABASE_URL dan NEXT_PUBLIC_SUPABASE_ANON_KEY." |
+| **Belum masuk** | Banner Info, fitur tetap jalan | "Hasil disimpan di browser ini saja." [Masuk] |
+| **Error memuat** | Kartu error + coba lagi | "Kursus gagal dimuat. Periksa koneksi lalu coba lagi." [Coba lagi] |
+| **Error form** | Inline per field + ringkasan di atas form bila > 2 error | "Email atau password tidak sesuai." |
+| **Sukses** | Toast; untuk pencapaian besar gunakan banner/layar perayaan | "Materi ditandai selesai." |
 
 Halaman yang memuat data **tidak boleh** kosong polos ketika gagal; selalu tampilkan state error dengan tombol "Coba lagi".
 
 ---
 
-## 17. Aksesibilitas
+## 18. Aksesibilitas
 
-- Kontras teks minimum 4.5:1 (teks besar 3:1). Ikuti tabel §4.5; **jangan** menaruh teks di atas Sprout selain Ink.
-- Fokus keyboard selalu terlihat: cincin 3px Sprout + jarak 2px (di latar gelap cincin Mint).
-- Target sentuh minimum 44×44px.
-- Status tidak boleh hanya dibedakan warna: tambahkan ikon/teks (✓ Selesai, 🔒 Terkunci, LIVE).
-- Progress bar memiliki label teks ("3 dari 5 materi").
+- Kontras teks minimum 4.5:1 (teks besar 3:1). Ikuti tabel §4.6; **jangan** menaruh teks di atas Sprout selain Ink.
+- Fokus keyboard selalu terlihat: cincin 3px Sprout + jarak 2px (di latar gelap dan zona foto cincin Mint).
+- Target sentuh minimum 44×44px, termasuk ibu jari dial.
+- **Dial** memakai elemen `input type="range"` dengan `aria-valuetext` berisi nilai terbaca ("f/5.6", "1/250 detik").
+- **Meter exposure** punya teks status yang dibacakan (`aria-live="polite"`), misalnya "Kurang satu sepertiga stop".
+- **Pratinjau & histogram** punya ringkasan teks ("Highlight terpotong 3%, shadow terpotong 0%").
+- Status tidak boleh hanya dibedakan warna: tambahkan ikon/teks (✓ Lulus, ↓ Kurang, Dilewati).
+- Progress bar memiliki label teks ("7 dari 10 materi").
 - Modal mengunci fokus di dalamnya dan mengembalikan fokus ke pemicu saat ditutup.
-- Video materi dan live mentoring: sediakan transkrip/teks; kontrol pemutar bisa dioperasikan keyboard.
-- Kamera/mikrofon di Bot Interview: jelaskan alasan izin sebelum meminta, sediakan jalur bila izin ditolak.
-- Animasi perayaan mengikuti preferensi kurangi gerakan.
+- Animasi mobil di simulator bisa dijeda dan dijeda otomatis jika "kurangi gerakan" aktif.
 
 ---
 
-## 18. Bahasa & Microcopy
+## 19. Bahasa & Microcopy
 
-**Nada:** ramah, menyemangati, ringkas; menyapa dengan "kamu".
+**Nada:** ramah, menyemangati, ringkas; menyapa dengan "kamu". Menjelaskan sebab, bukan menyalahkan ("Foto ini terlalu gelap karena…", bukan "Foto kamu salah").
 
 | Aturan | ✅ Lakukan | ❌ Hindari |
 |---|---|---|
-| Bahasa utama Indonesia | "Peringkat Global", "Sesi Mentoring" | Campur dalam satu judul: "Top Players Mingguan" |
-| Istilah Inggris hanya untuk nama fitur resmi | Career Center, CV Analyzer, Bot Interview, Final Project, Talent License, Leaderboard | "Evolution Path", "Scanning Player…", "Online Now" (ganti: "Jalur Evolusi", "Mencari pemain…", "Sedang online") |
-| Tombol = kata kerja + objek | "Simpan target", "Gabung sesi", "Unggah CV" | "OK", "Submit", "Klik di sini" |
-| Error menjelaskan solusi | "Ukuran file maks. 2 MB. Coba kompres atau pilih file lain." | "Upload gagal." |
-| Konsisten satu istilah | "Materi" (bukan bergantian Lesson/Modul/Unit) | "Target Baru (Lesson)" + "Unit" |
-| Angka format Indonesia | "1.250 XP", "19:00 WIB", "12 Mei 2026" | "1,250 XP" |
-| Sentence case | "Sesi mentoring mendatang" | "SESI MENTORING MENDATANG" |
+| Bahasa utama Indonesia | "Kursus yang kamu ikuti", "Analisis foto" | "My Courses", "Photo Analyzer" |
+| Istilah fotografi baku tetap dipakai | aperture, shutter speed, ISO, exposure, focal length, EXIF, histogram, bokeh | Terjemahan yang tidak lazim: "bukaan rana", "kecepatan penutup" |
+| Istilah teknis dijelaskan sekali | "Aperture (bukaan lensa)" pada kemunculan pertama di materi | Mengandaikan siswa sudah tahu |
+| Tombol = kata kerja + objek | "Kerjakan kuis", "Analisis foto", "Coba di simulator" | "OK", "Submit", "Klik di sini" |
+| Error menjelaskan solusi | "Ukuran foto maks. 25 MB. Pilih foto lain atau kecilkan resolusinya." | "Upload gagal." |
+| Konsisten satu istilah | Kursus › Modul › Materi; Kuis; Latihan (simulator) | Bergantian Lesson/Pelajaran/Unit |
+| Angka format Indonesia | "12 Mei 2026", "85,5", "ISO 6.400" | "May 12", "85.5" |
+| Kecuali notasi kamera | "f/5.6" (titik, sesuai yang tertulis di kamera) | "f/5,6" |
+| Sentence case | "Latihan simulator terakhir" | "LATIHAN SIMULATOR TERAKHIR" |
 
-**Glosarium:** XP (poin pengalaman) · Level (tahap evolusi) · Streak (hari beruntun belajar) · Misi (tugas berhadiah XP) · Lencana (badge pencapaian) · Materi (unit belajar terkecil) · Hari / Day (kelompok materi dalam bootcamp) · Bootcamp (program belajar lengkap).
+**Glosarium:**
+Kursus (program belajar lengkap) · Modul (kelompok materi) · Materi (unit belajar terkecil) · Kuis (soal pilihan ganda dengan ambang lulus) · Latihan (tantangan di simulator dengan kriteria lulus) · Analisis (pemeriksaan foto unggahan) · Exposure (banyaknya cahaya yang direkam) · EV (satuan perubahan exposure; 1 EV = 1 stop) · Stop (kelipatan dua atau setengah jumlah cahaya) · Clipping / terpotong (detail hilang karena terlalu gelap atau terang).
 
 ---
 
-## 19. Responsif
+## 20. Responsif
 
 | Breakpoint | Lebar | Shell | Grid |
 |---|---|---|---|
-| Mobile | < 768px | Navbar ringkas + bottom navigation | 4 kolom, padding 16px |
-| Tablet | 768–1023px | Sidebar ikon 72px | 8 kolom, padding 24px |
-| Desktop | 1024–1439px | Sidebar penuh 264px | 12 kolom, padding 32px |
-| Wide | ≥ 1440px | Sidebar penuh, konten maks. 1200px di tengah | 12 kolom, padding 40px |
+| Mobile | < 768px | Navbar ringkas + bottom navigation (siswa) / drawer (instruktur) | 4 kolom, padding 16px |
+| Tablet | 768–1023px | Navbar penuh; sidebar instruktur ikon 72px | 8 kolom, padding 24px |
+| Desktop | 1024–1439px | Navbar penuh; sidebar instruktur 264px | 12 kolom, padding 32px |
+| Wide | ≥ 1440px | Konten maks. 1200px di tengah | 12 kolom, padding 40px |
 
 **Aturan adaptasi:**
-- Grid kartu 3 kolom → 2 (tablet) → 1 (mobile); Stat Card → 2×2 di mobile.
-- Panel kanan yang menempel (kurikulum, statistik) pindah ke bawah konten utama atau menjadi tombol yang membuka drawer.
-- Tabel admin di mobile berubah menjadi kartu per baris.
+- Grid kartu 3 kolom → 2 (tablet) → 1 (mobile); Stat Card → 1 kolom atau geser horizontal di mobile.
+- Panel kanan yang menempel (daftar materi, progres kursus) pindah ke atas/bawah konten atau menjadi tombol yang membuka drawer.
+- Simulator mobile mengikuti §12.3; analisis foto mobile: foto → ringkasan → tab.
+- Tabel instruktur di mobile berubah menjadi kartu per baris.
 - Modal di mobile menjadi *bottom sheet* setinggi isi, tombol lebar penuh.
-- Live Mentoring mobile: video di atas, chat sebagai drawer.
 
 ---
 
-## 20. Checklist Review Desain
+## 21. Checklist Review Desain
 
 Gunakan sebelum layar baru dianggap selesai.
 
 **Visual**
-- [ ] Hanya Sprout/Mint sebagai aksen; tidak ada biru/ungu/oranye sisa
+- [ ] Hanya Sprout/Mint sebagai aksen; tidak ada amber/biru/oranye sisa tema lama
 - [ ] Tidak ada teks di atas Sprout selain Ink; tidak ada teks Sprout di latar putih
+- [ ] Foto, pratinjau, dan histogram berada di zona foto netral (§4.4)
 - [ ] Radius memakai 5 token; bayangan berbasis Ink
-- [ ] Tidak ada teks < 12px; kapital penuh hanya untuk overline/LIVE
+- [ ] Tidak ada teks < 12px; kapital penuh hanya untuk overline
 - [ ] Ikon dari satu set garis; emoji hanya untuk konten emosional
 
 **Struktur**
@@ -1006,15 +918,20 @@ Gunakan sebelum layar baru dianggap selesai.
 - [ ] Hanya satu tombol Primary per area pandang
 - [ ] Langkah berikutnya untuk pengguna terlihat jelas
 
+**Konten fotografi**
+- [ ] Notasi setelan mengikuti §5.3 dan memakai angka tabular
+- [ ] Status exposure memakai ikon + teks, bukan warna saja (§4.5)
+- [ ] Saran yang bergantung maksud fotografer ditulis bersyarat
+
 **State**
 - [ ] Skeleton, kosong, error (dengan coba lagi), dan sukses sudah didesain
+- [ ] Varian belum masuk dan Supabase belum dikonfigurasi sudah dipertimbangkan
 - [ ] Tombol memiliki state hover, focus, disabled, loading
-- [ ] Varian akun Google dan akun email (di Pengaturan) sudah dipertimbangkan
 
 **Aksesibilitas & konten**
-- [ ] Kontras lolos §4.5, target sentuh ≥ 44px, fokus terlihat
-- [ ] Status tidak hanya dibedakan warna
-- [ ] Teks mengikuti §18 (bahasa, format angka, nada)
+- [ ] Kontras lolos §4.6, target sentuh ≥ 44px, fokus terlihat
+- [ ] Dial dan meter bisa dipakai dengan keyboard dan pembaca layar
+- [ ] Teks mengikuti §19 (bahasa, format angka, nada)
 
 **Responsif**
 - [ ] Diuji di 375px, 768px, 1280px, 1440px
