@@ -186,16 +186,18 @@ Tujuan: peran instruktur bisa mengelola konten dan memantau siswa. Ini sprint te
 
 **Editor kursus minimal (G3)**, dikerjakan berurutan:
 
-- [ ] `app/instruktur/page.js` → daftar kursus milik instruktur + tombol "Kursus baru".
-- [ ] `app/instruktur/kursus/[courseId]/page.js` → ubah judul, deskripsi, level, status publikasi; daftar modul.
-- [ ] Tambah/ubah/hapus modul dan materi (judul, `position`, `content_md` dengan pratinjau, pilihan `simulator_exercise_id` dari `lib/exercises.js`).
-- [ ] Pembuat kuis: judul, `pass_score`, soal, opsi, tandai jawaban benar (memakai `get_quiz_answer_key` dari Sprint 5).
-- [ ] Fungsi data baru di `lib/instructor.js` agar komponen tetap tidak memanggil Supabase langsung, konsisten dengan pola `lib/lms.js`.
+- [x] Daftar kursus milik instruktur + tombol "Buat kursus" (`app/(staff)/instruktur/kursus/page.js`; `/instruktur` kini berisi Ringkasan).
+- [x] `app/(staff)/instruktur/kursus/[courseId]/page.js` → ubah judul, deskripsi, level, status publikasi; daftar modul.
+- [x] Tambah/ubah/hapus modul dan materi (judul, `position`, `content_md` dengan pratinjau, pilihan `simulator_exercise_id` dari `lib/exercises.js`).
+- [x] Pembuat kuis: judul, `pass_score`, soal, opsi, tandai jawaban benar. Untuk sementara memakai baca langsung `quiz_options.is_correct` (RLS mengizinkan); ganti ke `get_quiz_answer_key` setelah Sprint 5.
+- [x] Fungsi data baru di `lib/instructor.js` agar komponen tetap tidak memanggil Supabase langsung, konsisten dengan pola `lib/lms.js`.
 
 **Dasbor instruktur (G2)**
 
-- [ ] Per kursus: jumlah siswa terdaftar, persentase materi selesai per siswa, nilai kuis terakhir, jumlah latihan simulator yang lulus.
+- [x] Per kursus: jumlah siswa terdaftar, persentase materi selesai per siswa, nilai kuis terakhir, jumlah latihan simulator yang lulus.
 - [ ] Semua data ini sudah bisa dibaca instruktur lewat RLS `staff read ...`. Catatan: kebijakan itu mengizinkan instruktur membaca aktivitas **semua** siswa, bukan hanya siswa di kursusnya. Untuk prototype dapat diterima, tetapi tulis sebagai batasan di laporan.
+
+> Status 12 November 2026: halaman instruktur selesai dibangun dan diuji dengan Supabase tiruan (tampilan dan payload tulis), belum diuji di Supabase sungguhan. Belum ada: drawer detail siswa, drag-and-drop, dan peringatan "Buang perubahan?" saat berpindah item (hanya peringatan saat menutup tab).
 
 **Rencana cadangan jika waktu habis:** pembuat kuis di UI boleh dipangkas; kuis tetap bisa diisi lewat seed SQL. Prioritaskan CRUD kursus/modul/materi + publikasi + dasbor, karena itu yang membuktikan fungsi "management".
 

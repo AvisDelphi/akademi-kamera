@@ -13,6 +13,7 @@ import {
   LoginIcon,
   LogoutIcon,
   PhotoSearchIcon,
+  PresentationIcon,
   UserIcon,
 } from "@/components/icons";
 
@@ -32,7 +33,7 @@ function initials(name) {
 const menuItem =
   "flex h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-semibold text-tinta-700 transition-colors duration-[120ms] hover:bg-tinta-50";
 
-function AccountMenu({ user, displayName, onSignOut }) {
+function AccountMenu({ user, displayName, role, onSignOut }) {
   const [open, setOpen] = useState(false);
   const wrapper = useRef(null);
 
@@ -82,6 +83,11 @@ function AccountMenu({ user, displayName, onSignOut }) {
             <Link href="/dasbor" role="menuitem" onClick={() => setOpen(false)} className={menuItem}>
               <GridIcon size={20} /> Dasbor
             </Link>
+            {(role === "instructor" || role === "admin") && (
+              <Link href="/instruktur" role="menuitem" onClick={() => setOpen(false)} className={menuItem}>
+                <PresentationIcon size={20} /> Area Instruktur
+              </Link>
+            )}
             <Link href="/profil" role="menuitem" onClick={() => setOpen(false)} className={menuItem}>
               <UserIcon size={20} /> Profil
             </Link>
@@ -108,7 +114,7 @@ function AccountMenu({ user, displayName, onSignOut }) {
 export default function SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
-  const { loading, user, displayName, signOut } = useAuth();
+  const { loading, user, displayName, role, signOut } = useAuth();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -167,7 +173,7 @@ export default function SiteHeader() {
             })}
           </ul>
 
-          {!loading && user && <AccountMenu user={user} displayName={displayName} onSignOut={handleSignOut} />}
+          {!loading && user && <AccountMenu user={user} displayName={displayName} role={role} onSignOut={handleSignOut} />}
 
           {!loading && !user && (
             <div className="flex items-center gap-2">

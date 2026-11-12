@@ -759,7 +759,7 @@ Pratinjau di atas (lebar penuh), meter tepat di bawahnya, setelan dalam tab ring
 
 ## 15. Area Instruktur & Admin
 
-Area ini adalah **prioritas pengembangan berikutnya** di README (dasbor instruktur dan editor kursus). Halaman ini memakai sidebar Ink (§9.2).
+Area ini memakai sidebar Ink (§9.2) dan berada di route group `app/(staff)/`, terpisah dari navbar situs. Status: Ringkasan, Kursus saya, editor kursus, editor materi + kuis, dan Siswa & nilai sudah ada; Area Admin (Pengguna & peran) belum. Penyederhanaan yang disengaja: editor kursus memakai daftar modul/materi dengan tombol naik-turun (bukan pohon + panel), dan tabel siswa belum punya drawer detail.
 
 | Menu | Isi utama |
 |---|---|

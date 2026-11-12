@@ -260,3 +260,47 @@ export function MenuIcon(props) {
     </Icon>
   );
 }
+
+export function PlusIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M12 5v14M5 12h14" />
+    </Icon>
+  );
+}
+
+export function TrashIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l1 12.5h9l1-12.5M10 11v5M14 11v5" />
+    </Icon>
+  );
+}
+
+export function UsersIcon(props) {
+  return (
+    <Icon {...props}>
+      <circle cx="9" cy="8.5" r="3.2" />
+      <path d="M3 19.500c.5-3.3 3-5 6-5s5.5 1.7 6 5" />
+      <path d="M15.5 5.700a3.2 3.2 0 0 1 0 5.600M17.5 14.800c2 .6 3.2 2.2 3.5 4.7" />
+    </Icon>
+  );
+}
+
+export function PresentationIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M3.5 4.500h17M5 4.500V15a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4.500M12 16v3.500M8.5 20h7" />
+      <path d="m8.5 12 2.5-3 2 2 3-3.5" />
+    </Icon>
+  );
+}
+
+export function PencilIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M4 20h4l10.5-10.500a2.1 2.1 0 0 0-3-3L5 17v3Z" />
+      <path d="m13.5 7.5 3 3" />
+    </Icon>
+  );
+}
