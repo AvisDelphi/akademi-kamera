@@ -137,6 +137,36 @@ create index on public.lessons (module_id);
 create index on public.exercise_attempts (user_id, exercise_id);
 create index on public.photo_analyses (user_id);
 
+-- Ownership helpers for the quiz policies. SECURITY DEFINER keeps the planner from expanding
+-- row-level security through five joined tables (see migration 20261112000250).
+create or replace function public.owns_quiz(p_quiz_id bigint) returns boolean
+language sql stable security definer set search_path = public as $$
+  select exists (
+    select 1
+    from public.quizzes q
+    join public.lessons l on l.id = q.lesson_id
+    join public.modules m on m.id = l.module_id
+    join public.courses c on c.id = m.course_id
+    where q.id = p_quiz_id and (c.instructor_id = auth.uid() or public.my_role() = 'admin')
+  );
+$$;
+
+create or replace function public.owns_question(p_question_id bigint) returns boolean
+language sql stable security definer set search_path = public as $$
+  select exists (
+    select 1
+    from public.quiz_questions qq
+    join public.quizzes q on q.id = qq.quiz_id
+    join public.lessons l on l.id = q.lesson_id
+    join public.modules m on m.id = l.module_id
+    join public.courses c on c.id = m.course_id
+    where qq.id = p_question_id and (c.instructor_id = auth.uid() or public.my_role() = 'admin')
+  );
+$$;
+
+revoke all on function public.owns_quiz(bigint), public.owns_question(bigint) from public;
+grant execute on function public.owns_quiz(bigint), public.owns_question(bigint) to anon, authenticated;
+
 -- ---------- Row Level Security ----------
 alter table public.profiles          enable row level security;
 alter table public.courses           enable row level security;
@@ -207,35 +237,25 @@ create policy "owner writes quizzes" on public.quizzes for all
 
 create policy "read questions" on public.quiz_questions for select
   using (exists (select 1 from public.quizzes q where q.id = quiz_id));
-create policy "owner writes questions" on public.quiz_questions for all
-  using (exists (select 1 from public.quizzes q
-                 join public.lessons l on l.id = q.lesson_id
-                 join public.modules m on m.id = l.module_id
-                 join public.courses c on c.id = m.course_id
-                 where q.id = quiz_id and (c.instructor_id = auth.uid() or public.my_role() = 'admin')))
-  with check (exists (select 1 from public.quizzes q
-                 join public.lessons l on l.id = q.lesson_id
-                 join public.modules m on m.id = l.module_id
-                 join public.courses c on c.id = m.course_id
-                 where q.id = quiz_id and (c.instructor_id = auth.uid() or public.my_role() = 'admin')));
+-- Write policies only (no SELECT): reads go through the "read ..." policies, which already let an
+-- instructor see their own drafts.
+create policy "owner inserts questions" on public.quiz_questions for insert
+  with check (public.owns_quiz(quiz_id));
+create policy "owner updates questions" on public.quiz_questions for update
+  using (public.owns_quiz(quiz_id)) with check (public.owns_quiz(quiz_id));
+create policy "owner deletes questions" on public.quiz_questions for delete
+  using (public.owns_quiz(quiz_id));
 
 -- NOTE: students can read options, including is_correct. For the prototype that is
 -- acceptable; for production, grade quizzes in a server-side function instead.
 create policy "read options" on public.quiz_options for select
   using (exists (select 1 from public.quiz_questions qq where qq.id = question_id));
-create policy "owner writes options" on public.quiz_options for all
-  using (exists (select 1 from public.quiz_questions qq
-                 join public.quizzes q on q.id = qq.quiz_id
-                 join public.lessons l on l.id = q.lesson_id
-                 join public.modules m on m.id = l.module_id
-                 join public.courses c on c.id = m.course_id
-                 where qq.id = question_id and (c.instructor_id = auth.uid() or public.my_role() = 'admin')))
-  with check (exists (select 1 from public.quiz_questions qq
-                 join public.quizzes q on q.id = qq.quiz_id
-                 join public.lessons l on l.id = q.lesson_id
-                 join public.modules m on m.id = l.module_id
-                 join public.courses c on c.id = m.course_id
-                 where qq.id = question_id and (c.instructor_id = auth.uid() or public.my_role() = 'admin')));
+create policy "owner inserts options" on public.quiz_options for insert
+  with check (public.owns_question(question_id));
+create policy "owner updates options" on public.quiz_options for update
+  using (public.owns_question(question_id)) with check (public.owns_question(question_id));
+create policy "owner deletes options" on public.quiz_options for delete
+  using (public.owns_question(question_id));
 
 -- Student activity: students read/write only their own rows; instructors and admins can read all.
 create policy "own enrollments" on public.enrollments for all
