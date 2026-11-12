@@ -109,7 +109,7 @@ export default function CourseCatalog() {
           />
         </div>
 
-        <div role="group" aria-label="Filter level" className="inline-flex rounded-xl bg-tinta-100 p-1">
+        <div role="group" aria-label="Filter level" className="inline-flex max-w-full overflow-x-auto rounded-xl bg-tinta-100 p-1">
           {LEVELS.map((option) => {
             const active = level === option.value;
             return (

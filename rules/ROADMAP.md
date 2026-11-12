@@ -171,10 +171,12 @@ Tujuan: menutup celah kunci jawaban dan memberi peran admin antarmukanya.
 
 **Panel admin (G1, G6)**
 
-- [ ] Komponen penjaga peran `components/auth/RequireRole.js` (menampilkan "akses ditolak" jika peran tidak sesuai).
-- [ ] Halaman `app/admin/pengguna/page.js` + `components/admin/UserManager.js`: daftar pengguna, cari nama, ubah peran. RLS `admin manages profiles` sudah ada, jadi tidak perlu fungsi server baru.
-- [ ] Email pengguna tidak tersedia di `profiles`. Pilihan paling sederhana: tambahkan kolom `email` yang diisi oleh trigger `handle_new_user` (migrasi baru) agar admin bisa mengenali akun.
-- [ ] Tautan "Admin" di `components/SiteHeader.js` hanya untuk peran admin.
+- [x] Komponen penjaga peran `components/auth/RequireRole.js` (menampilkan "akses ditolak" jika peran tidak sesuai).
+- [x] Halaman `app/(staff)/admin/pengguna/page.js` + `components/admin/UserManager.js`: daftar pengguna, cari nama atau email, filter peran, ubah peran lewat modal konfirmasi. RLS `admin manages profiles` sudah ada, jadi tidak perlu fungsi server baru.
+- [x] Email pengguna tidak tersedia di `profiles` (migrasi `20261112000200_profiles_email.sql`: kolom `email`, backfill, trigger, dan batasan kolom yang boleh diubah). Pilihan paling sederhana: tambahkan kolom `email` yang diisi oleh trigger `handle_new_user` (migrasi baru) agar admin bisa mengenali akun.
+- [x] Tautan "Admin" di `components/SiteHeader.js` (menu akun) hanya untuk peran admin; sidebar punya bagian ADMIN yang juga hanya untuk admin.
+
+> Status 12 November 2026: panel admin selesai dan diuji dengan Supabase tiruan serta Postgres lokal untuk migrasinya; belum diuji di Supabase sungguhan. Penilaian kuis di server (G4) belum dikerjakan.
 
 **Definition of Done:** siswa tidak bisa membaca `is_correct` lewat konsol browser, nilai hanya tercatat lewat RPC, admin dapat menaikkan siswa menjadi instruktur dari UI.
 
@@ -186,16 +188,18 @@ Tujuan: peran instruktur bisa mengelola konten dan memantau siswa. Ini sprint te
 
 **Editor kursus minimal (G3)**, dikerjakan berurutan:
 
-- [ ] `app/instruktur/page.js` → daftar kursus milik instruktur + tombol "Kursus baru".
-- [ ] `app/instruktur/kursus/[courseId]/page.js` → ubah judul, deskripsi, level, status publikasi; daftar modul.
-- [ ] Tambah/ubah/hapus modul dan materi (judul, `position`, `content_md` dengan pratinjau, pilihan `simulator_exercise_id` dari `lib/exercises.js`).
-- [ ] Pembuat kuis: judul, `pass_score`, soal, opsi, tandai jawaban benar (memakai `get_quiz_answer_key` dari Sprint 5).
-- [ ] Fungsi data baru di `lib/instructor.js` agar komponen tetap tidak memanggil Supabase langsung, konsisten dengan pola `lib/lms.js`.
+- [x] Daftar kursus milik instruktur + tombol "Buat kursus" (`app/(staff)/instruktur/kursus/page.js`; `/instruktur` kini berisi Ringkasan).
+- [x] `app/(staff)/instruktur/kursus/[courseId]/page.js` → ubah judul, deskripsi, level, status publikasi; daftar modul.
+- [x] Tambah/ubah/hapus modul dan materi (judul, `position`, `content_md` dengan pratinjau, pilihan `simulator_exercise_id` dari `lib/exercises.js`).
+- [x] Pembuat kuis: judul, `pass_score`, soal, opsi, tandai jawaban benar. Untuk sementara memakai baca langsung `quiz_options.is_correct` (RLS mengizinkan); ganti ke `get_quiz_answer_key` setelah Sprint 5.
+- [x] Fungsi data baru di `lib/instructor.js` agar komponen tetap tidak memanggil Supabase langsung, konsisten dengan pola `lib/lms.js`.
 
 **Dasbor instruktur (G2)**
 
-- [ ] Per kursus: jumlah siswa terdaftar, persentase materi selesai per siswa, nilai kuis terakhir, jumlah latihan simulator yang lulus.
+- [x] Per kursus: jumlah siswa terdaftar, persentase materi selesai per siswa, nilai kuis terakhir, jumlah latihan simulator yang lulus.
 - [ ] Semua data ini sudah bisa dibaca instruktur lewat RLS `staff read ...`. Catatan: kebijakan itu mengizinkan instruktur membaca aktivitas **semua** siswa, bukan hanya siswa di kursusnya. Untuk prototype dapat diterima, tetapi tulis sebagai batasan di laporan.
+
+> Status 12 November 2026: halaman instruktur selesai dibangun dan diuji dengan Supabase tiruan (tampilan dan payload tulis), belum diuji di Supabase sungguhan. Belum ada: drawer detail siswa, drag-and-drop, dan peringatan "Buang perubahan?" saat berpindah item (hanya peringatan saat menutup tab).
 
 **Rencana cadangan jika waktu habis:** pembuat kuis di UI boleh dipangkas; kuis tetap bisa diisi lewat seed SQL. Prioritaskan CRUD kursus/modul/materi + publikasi + dasbor, karena itu yang membuktikan fungsi "management".
 

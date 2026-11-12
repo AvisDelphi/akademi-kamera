@@ -13,6 +13,7 @@ create table public.profiles (
   id          uuid primary key references auth.users (id) on delete cascade,
   full_name   text not null default '',
   role        public.user_role not null default 'student',
+  email       text,  -- copy of auth.users.email so admins can recognise accounts
   created_at  timestamptz not null default now()
 );
 
@@ -21,8 +22,8 @@ create table public.profiles (
 create function public.handle_new_user() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
-  insert into public.profiles (id, full_name)
-  values (new.id, coalesce(new.raw_user_meta_data ->> 'full_name', ''));
+  insert into public.profiles (id, full_name, email)
+  values (new.id, coalesce(new.raw_user_meta_data ->> 'full_name', ''), new.email);
   return new;
 end;
 $$;
@@ -161,6 +162,11 @@ create policy "update own name" on public.profiles for update
   using (id = auth.uid()) with check (id = auth.uid() and role = public.my_role());
 create policy "admin manages profiles" on public.profiles for all
   using (public.my_role() = 'admin') with check (public.my_role() = 'admin');
+
+-- Users may only change their name; admins may also change roles (RLS above decides who).
+-- The e-mail copy is maintained by the sign-up trigger only.
+revoke update on public.profiles from authenticated;
+grant update (full_name, role) on public.profiles to authenticated;
 
 -- Courses: published courses are readable by any logged-in user;
 -- instructors manage their own; admins manage all.
