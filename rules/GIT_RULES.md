@@ -73,7 +73,7 @@ Always use one of these types. Never invent new ones.
 ## 4. Scope
 
 - Optional, but use it when the change is limited to one area.
-- Use a short, lowercase noun matching a module, folder, or feature: `auth`, `api`, `ui`, `db`, `deps`, `config`.
+- Use a short, lowercase noun matching a module, folder, or feature. Scopes for Akademi Kamera: `simulator`, `analyzer`, `lms`, `quiz`, `instructor`, `auth`, `db`, `ui`, `rules`, `deps`, `config`.
 - Stay consistent with scopes already used in the git history (`git log --oneline` to check).
 
 ---
