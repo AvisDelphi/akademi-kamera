@@ -237,8 +237,16 @@ create policy "own enrollments" on public.enrollments for all
 create policy "staff read enrollments" on public.enrollments for select
   using (public.my_role() in ('instructor', 'admin'));
 
-create policy "own lesson progress" on public.lesson_progress for all
-  using (user_id = auth.uid()) with check (user_id = auth.uid());
+create policy "own lesson progress read" on public.lesson_progress for select
+  using (user_id = auth.uid());
+create policy "own lesson progress insert" on public.lesson_progress for insert
+  with check (user_id = auth.uid()
+    and exists (select 1 from public.lessons l
+                join public.modules m on m.id = l.module_id
+                join public.courses c on c.id = m.course_id
+                where l.id = lesson_id and c.is_published));
+create policy "own lesson progress delete" on public.lesson_progress for delete
+  using (user_id = auth.uid());
 create policy "staff read lesson progress" on public.lesson_progress for select
   using (public.my_role() in ('instructor', 'admin'));
 

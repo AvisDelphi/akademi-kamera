@@ -141,6 +141,8 @@ Langkah ini dibutuhkan agar halaman login, kursus, kuis, dan dasbor aktif.
 7. Masukkan dua variabel lingkungan yang sama di Vercel: **Project > Settings > Environment Variables**, lalu redeploy.
 
 > Jika basis data sudah dibuat sebelum halaman LMS ada, jalankan sekali `supabase/migrations/20261109000000_lms_profiles.sql` agar nama instruktur dapat ditampilkan di katalog.
+>
+> Jika basis data dibuat sebelum 12 November 2026, jalankan juga `supabase/migrations/20261112000000_fix_quiz_rls.sql` dan `supabase/migrations/20261112000100_restrict_lesson_progress.sql` (perbaikan hak akses soal kuis dan progres materi). Keduanya aman dijalankan ulang.
 
 Setelah pengguna login, `lib/progress.js` otomatis menyimpan hasil ke tabel `exercise_attempts` dan `photo_analyses`. Jika belum login, data tetap disimpan di browser.
 
