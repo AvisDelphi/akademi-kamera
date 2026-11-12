@@ -1,6 +1,6 @@
-// app/layout.js — root layout shared by every page (tema Ink & Sprout).
+// app/layout.js — root layout: font, tema, dan sesi. Navbar ada di app/(app)/layout.js;
+// landing page (/) sengaja tanpa navbar.
 import "./globals.css";
-import SiteHeader from "@/components/SiteHeader";
 import { AuthProvider } from "@/lib/auth";
 
 export const metadata = {
@@ -23,9 +23,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className="min-h-screen font-instrument text-tinta-900">
         <AuthProvider>
-          <SiteHeader />
-          {/* pb-24 di mobile memberi ruang untuk navigasi bawah (§9.3) */}
-          <main className="mx-auto max-w-[1200px] px-4 pb-24 sm:px-6 md:pb-16 lg:px-8">{children}</main>
+          {children}
         </AuthProvider>
       </body>
     </html>

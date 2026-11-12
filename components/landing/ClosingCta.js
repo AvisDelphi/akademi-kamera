@@ -14,7 +14,7 @@ export default function ClosingCta() {
     >
       <div className="max-w-xl">
         <h2 id="judul-ajakan" className="text-2xl font-bold leading-8">
-          {signedIn ? "Lanjutkan belajarmu" : "Daftar gratis untuk menyimpan progresmu"}
+          {signedIn ? "Lanjutkan belajarmu" : "Buat akun untuk menyimpan progresmu"}
         </h2>
         <p className="mt-2 text-base leading-[26px] text-tinta-300">
           {signedIn

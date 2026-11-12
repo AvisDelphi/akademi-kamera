@@ -1,5 +1,6 @@
 // app/not-found.js — halaman 404 (UIUX_GUIDELINE §17): jelaskan apa yang terjadi dan beri jalan keluar.
 import Link from "next/link";
+import SiteHeader from "@/components/SiteHeader";
 import { ApertureIcon } from "@/components/icons";
 import { btn } from "@/components/lms/ui";
 
@@ -7,6 +8,9 @@ export const metadata = { title: "Halaman tidak ditemukan | Akademi Kamera" };
 
 export default function NotFound() {
   return (
+    <>
+    <SiteHeader />
+    <main className="mx-auto max-w-[1200px] px-4 pb-24 sm:px-6 md:pb-16 lg:px-8">
     <section aria-labelledby="judul-404" className="mx-auto flex max-w-xl flex-col items-center py-16 text-center sm:py-24">
       <div className="relative grid size-40 place-items-center rounded-[40px] bg-sprout-100">
         <span className="grid size-20 place-items-center rounded-3xl bg-tinta-900 text-sprout-300">
@@ -40,5 +44,7 @@ export default function NotFound() {
         .
       </p>
     </section>
+    </main>
+    </>
   );
 }
