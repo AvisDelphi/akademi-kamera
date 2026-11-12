@@ -50,7 +50,7 @@ Pendukung lain:
 1. Pengguna mengunggah foto (JPG, PNG, WEBP, HEIC, TIFF, maks. 25 MB).
 2. Sistem membaca metadata EXIF: aperture, shutter, ISO, focal length (termasuk setara 35 mm), kamera, lensa, flash, white balance, mode exposure, mode metering, kompensasi exposure.
 3. Sistem mengukur piksel foto: histogram, persentase shadow/highlight terpotong, skor ketajaman, dan warna dominan.
-4. Sistem pakar berbasis aturan (13 aturan) menghasilkan saran beserta nilai setelan baru, contoh: *"Shutter 1/30 pada 85 mm berisiko goyang. Coba 1/100 dan naikkan ISO ke 640."*
+4. Sistem pakar berbasis aturan (14 aturan) menghasilkan saran beserta nilai setelan baru, contoh: *"Shutter 1/30 pada 85 mm berisiko goyang. Coba 1/100 dan naikkan ISO ke 640."*
 5. Tabel "Mengapa saran ini muncul" menampilkan status tiap aturan: terpicu, tidak terpicu, atau dilewati karena data tidak tersedia.
 
 Penanganan EXIF yang hilang:
@@ -141,6 +141,8 @@ Langkah ini dibutuhkan agar halaman login, kursus, kuis, dan dasbor aktif.
 7. Masukkan dua variabel lingkungan yang sama di Vercel: **Project > Settings > Environment Variables**, lalu redeploy.
 
 > Jika basis data sudah dibuat sebelum halaman LMS ada, jalankan sekali `supabase/migrations/20261109000000_lms_profiles.sql` agar nama instruktur dapat ditampilkan di katalog.
+>
+> Jika basis data dibuat sebelum 12 November 2026, jalankan juga `supabase/migrations/20261112000000_fix_quiz_rls.sql` dan `supabase/migrations/20261112000100_restrict_lesson_progress.sql` (perbaikan hak akses soal kuis dan progres materi). Keduanya aman dijalankan ulang.
 
 Setelah pengguna login, `lib/progress.js` otomatis menyimpan hasil ke tabel `exercise_attempts` dan `photo_analyses`. Jika belum login, data tetap disimpan di browser.
 

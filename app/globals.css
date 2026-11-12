@@ -54,6 +54,11 @@
 html {
   color-scheme: light;
 }
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
 
 body {
   background: var(--color-canvas);

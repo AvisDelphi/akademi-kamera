@@ -243,3 +243,20 @@ export function CompassIcon(props) {
     </Icon>
   );
 }
+
+export function LockIcon(props) {
+  return (
+    <Icon {...props}>
+      <rect x="5" y="10.5" width="14" height="9.5" rx="2" />
+      <path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" />
+    </Icon>
+  );
+}
+
+export function MenuIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M4 7h16M4 12h16M4 17h16" />
+    </Icon>
+  );
+}

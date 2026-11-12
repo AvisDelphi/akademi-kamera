@@ -742,6 +742,7 @@ Pratinjau di atas (lebar penuh), meter tepat di bawahnya, setelan dalam tab ring
 ## 14. Halaman Publik & Autentikasi
 
 ### 14.1 Beranda (`/`)
+- **Navbar landing tersendiri** (`components/landing/LandingNav.js`), bukan navbar aplikasi: logo, tautan antar-section (Mengapa kami · Fitur · FAQ), Masuk dan Daftar (atau "Buka dasbor" bila sudah masuk). Di mobile tautan section dan tombol akun ada di menu lipat. Landing berada di luar `app/(app)/`. Urutan: hero → angka singkat → mengapa Akademi Kamera → fitur unggulan → FAQ → CTA → footer.
 - Hero: judul `display` ("Pahami exposure dengan memotret, bukan menghafal"), subjudul, CTA Primary "Coba simulator" + Secondary "Lihat kursus", ilustrasi kamera/diafragma di kanan.
 - Tiga kartu fitur sesuai pilar: Kursus · Simulator kamera · Analisis foto, masing-masing dengan tautan.
 - Bagian "Cara kerja": Pahami → Coba → Terapkan → Ukur (stepper horizontal).
