@@ -92,6 +92,8 @@ Temuan dari kode saat ini (`app/globals.css`, `app/layout.js`, komponen di `comp
 
 Migrasi dilakukan bertahap per halaman; jangan mencampur dua tema dalam satu halaman.
 
+**Status migrasi (12 November 2026):** seluruh halaman yang ada (Beranda, Masuk, Daftar, Dasbor, Kursus, Detail Kursus, Materi, Kuis, Simulator, Analisis Foto, Profil, 404, halaman error) sudah memakai tema Ink & Sprout; tema gelap-amber dihapus. Area Instruktur & Admin (§15) belum dibuat.
+
 ---
 
 ## 4. Fondasi: Warna

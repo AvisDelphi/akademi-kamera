@@ -104,3 +104,142 @@ export function CheckIcon(props) {
     </Icon>
   );
 }
+
+export function ArrowLeftIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M19 12H5M11 6l-6 6 6 6" />
+    </Icon>
+  );
+}
+
+export function ArrowUpIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M12 19V5M6 11l6-6 6 6" />
+    </Icon>
+  );
+}
+
+export function ArrowDownIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M12 5v14M6 13l6 6 6-6" />
+    </Icon>
+  );
+}
+
+export function AlertIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M12 4 2.8 19.5h18.4L12 4Z" />
+      <path d="M12 10v4.5M12 17.4v.1" />
+    </Icon>
+  );
+}
+
+export function InfoIcon(props) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 11v5.5M12 7.6v.1" />
+    </Icon>
+  );
+}
+
+export function XIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M6 6l12 12M18 6 6 18" />
+    </Icon>
+  );
+}
+
+export function ImageIcon(props) {
+  return (
+    <Icon {...props}>
+      <rect x="3.5" y="5" width="17" height="14" rx="2" />
+      <circle cx="9" cy="10" r="1.5" />
+      <path d="m4 17 5-5 4 4 2.5-2.5L20 17" />
+    </Icon>
+  );
+}
+
+export function EyeIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" />
+      <circle cx="12" cy="12" r="2.8" />
+    </Icon>
+  );
+}
+
+export function EyeOffIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M4 4l16 16" />
+      <path d="M9.9 5.8A9.6 9.6 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a16 16 0 0 1-3.2 3.9M6.6 7.7A15.7 15.7 0 0 0 2.5 12S6 18.5 12 18.5c1.3 0 2.5-.3 3.6-.8" />
+      <path d="M10 10a2.8 2.8 0 0 0 4 4" />
+    </Icon>
+  );
+}
+
+export function SearchIcon(props) {
+  return (
+    <Icon {...props}>
+      <circle cx="11" cy="11" r="6.5" />
+      <path d="m16 16 4 4" />
+    </Icon>
+  );
+}
+
+export function ChevronDownIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="m6 9 6 6 6-6" />
+    </Icon>
+  );
+}
+
+export function UserIcon(props) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="8.5" r="3.5" />
+      <path d="M5 20c.6-3.6 3.4-5.5 7-5.500s6.4 1.9 7 5.5" />
+    </Icon>
+  );
+}
+
+export function PlayIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M8 5.500v13l10-6.5-10-6.500Z" />
+    </Icon>
+  );
+}
+
+export function PauseIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M8.5 5.500v13M15.5 5.500v13" />
+    </Icon>
+  );
+}
+
+export function LogoutIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4" />
+      <path d="m16 8 4 4-4 4M20 12H9" />
+    </Icon>
+  );
+}
+
+export function CompassIcon(props) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="m15.5 8.5-2 5-5 2 2-5 5-2Z" />
+    </Icon>
+  );
+}

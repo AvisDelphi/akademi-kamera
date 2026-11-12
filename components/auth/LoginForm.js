@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth";
-import { SupabaseNotice } from "@/components/lms/ui";
+import { Banner, SupabaseNotice, btn } from "@/components/lms/ui";
+import Field from "./Field";
+import PasswordField from "./PasswordField";
 
 function safeNext(value) {
   return value && value.startsWith("/") && !value.startsWith("//") ? value : "/kursus";
@@ -17,21 +19,27 @@ export default function LoginForm() {
   const next = safeNext(searchParams.get("next"));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
 
-  // Already signed in (or just signed in): continue where the user was going.
+  // Sudah masuk (atau baru masuk): lanjut ke tujuan semula.
   useEffect(() => {
     if (!loading && user) router.replace(next);
   }, [loading, user, next, router]);
 
+  const validators = {
+    email: (value) => (value.trim() ? null : "Isi email yang kamu pakai saat mendaftar."),
+    password: (value) => (value ? null : "Isi kata sandimu."),
+  };
+  const checkField = (name, value) => setFieldErrors((prev) => ({ ...prev, [name]: validators[name](value) }));
+
   async function handleSubmit(event) {
     event.preventDefault();
     setError(null);
-    if (!email.trim() || !password) {
-      setError("Isi email dan kata sandi.");
-      return;
-    }
+    const errors = { email: validators.email(email), password: validators.password(password) };
+    setFieldErrors(errors);
+    if (errors.email || errors.password) return;
     setBusy(true);
     const result = await signIn(email.trim(), password);
     setBusy(false);
@@ -45,48 +53,41 @@ export default function LoginForm() {
   if (!enabled) return <SupabaseNotice />;
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md space-y-4" noValidate>
-      <label className="block text-sm text-muted">
-        Email
-        <input
-          type="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          autoComplete="email"
-          className="mt-1 block w-full rounded border border-rule bg-panel px-3 py-2 text-ink"
-          required
-        />
-      </label>
-      <label className="block text-sm text-muted">
-        Kata sandi
-        <input
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          autoComplete="current-password"
-          className="mt-1 block w-full rounded border border-rule bg-panel px-3 py-2 text-ink"
-          required
-        />
-      </label>
-
+    <form onSubmit={handleSubmit} className="space-y-5" noValidate>
       {error && (
-        <p className="rounded border border-over/50 bg-panel p-3 text-sm text-over" role="alert">
+        <Banner tone="danger" role="alert">
           {error}
-        </p>
+        </Banner>
       )}
 
-      <button
-        type="submit"
-        disabled={busy}
-        className="rounded-full bg-amber px-6 py-2 font-display text-lg font-semibold text-surround disabled:opacity-60"
-      >
+      <Field
+        id="email"
+        label="Email"
+        type="email"
+        value={email}
+        onChange={(event) => setEmail(event.target.value)}
+        onBlur={() => checkField("email", email)}
+        autoComplete="email"
+        error={fieldErrors.email}
+      />
+      <PasswordField
+        id="password"
+        label="Kata sandi"
+        value={password}
+        onChange={(event) => setPassword(event.target.value)}
+        onBlur={() => checkField("password", password)}
+        autoComplete="current-password"
+        error={fieldErrors.password}
+      />
+
+      <button type="submit" disabled={busy} className={`${btn("primary", "l")} w-full`}>
         {busy ? "Memeriksa…" : "Masuk"}
       </button>
 
-      <p className="text-sm text-muted">
+      <p className="text-center text-sm text-tinta-500">
         Belum punya akun?{" "}
-        <Link href={`/daftar?next=${encodeURIComponent(next)}`} className="text-amber underline">
-          Daftar sebagai siswa
+        <Link href={`/daftar?next=${encodeURIComponent(next)}`} className="font-semibold text-sprout-700 hover:underline">
+          Daftar
         </Link>
       </p>
     </form>

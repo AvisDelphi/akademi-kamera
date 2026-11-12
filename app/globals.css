@@ -1,30 +1,13 @@
 @import "tailwindcss";
 
 /*
-  Design tokens. The interface uses a NEUTRAL mid-dark grey on purpose:
-  photo-editing tools (and ISO 3664 viewing guidance) use a neutral surround
-  so the eye judges image brightness and colour without bias.
+  Design tokens: tema Ink & Sprout (rules/UIUX_GUIDELINE.md §4–§6) untuk seluruh aplikasi.
+  Ink/Slate diberi nama `tinta` karena `ink` pernah dipakai tema lama.
+  Warna `photo-*` hanya untuk zona foto netral (§4.4): pratinjau simulator, foto unggahan, histogram.
 */
 @theme {
-  --color-surround: #262626;
-  --color-panel: #303030;
-  --color-rule: #444444;
-  --color-ink: #ececec;
-  --color-muted: #a8a8a8;
-  --color-amber: #f2b544;
-  --color-correct: #7cc69a;
-  --color-over: #f07e61;
-  --color-under: #7fb2f0;
-
-  --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Barlow Semi Condensed", "Barlow", ui-sans-serif, system-ui, sans-serif;
-
-  /*
-    Ink & Sprout theme (rules/UIUX_GUIDELINE.md §4–§6). Pages migrate one at
-    a time; a migrated page wraps its content in `.theme-sprout`. `ink` is
-    still taken by the old theme, so the Ink/Slate scale is named `tinta`.
-  */
   --color-canvas: #f6f8f3;
+
   --color-sprout-50: #f3fceb;
   --color-sprout-100: #e0f8c7;
   --color-sprout-200: #cdeaae;
@@ -34,6 +17,7 @@
   --color-sprout-600: #5e8a3a;
   --color-sprout-700: #4a6e2c;
   --color-sprout-800: #375221;
+
   --color-tinta-50: #f4f6f9;
   --color-tinta-100: #e6e9ef;
   --color-tinta-200: #c9ceda;
@@ -44,38 +28,37 @@
   --color-tinta-700: #36415a;
   --color-tinta-800: #2a3347;
   --color-tinta-900: #202734;
+  --color-tinta-950: #161b25;
+
+  /* Status semantik (§4.3) */
+  --color-warn-fg: #8e6a12;
+  --color-warn-bg: #fdf3dc;
+  --color-warn-line: #f3dfa8;
+  --color-danger-fg: #b3372f;
+  --color-danger-bg: #fdecea;
+  --color-danger-line: #f5c6c2;
+
+  /* Zona foto netral (§4.4) */
+  --color-photo-surround: #262626;
+  --color-photo-panel: #303030;
+  --color-photo-rule: #444444;
+  --color-photo-text: #ececec;
 
   --font-instrument: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
 
   --shadow-e1: 0 1px 2px rgba(32, 39, 52, 0.06);
   --shadow-e2: 0 8px 24px rgba(32, 39, 52, 0.08);
-}
-
-/* A page on the Ink & Sprout theme switches the whole document to light. */
-html:has(.theme-sprout) {
-  color-scheme: light;
-}
-body:has(.theme-sprout) {
-  background: var(--color-canvas);
-  color: var(--color-tinta-900);
-  font-family: var(--font-instrument);
-}
-body:has(.theme-sprout) :focus-visible {
-  outline: 3px solid var(--color-sprout-300);
-  outline-offset: 2px;
-}
-body:has(.theme-sprout) [data-surface="dark"] :focus-visible {
-  outline-color: var(--color-sprout-100);
+  --shadow-e3: 0 24px 48px rgba(32, 39, 52, 0.16);
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
-  background: var(--color-surround);
-  color: var(--color-ink);
-  font-family: var(--font-sans);
+  background: var(--color-canvas);
+  color: var(--color-tinta-900);
+  font-family: var(--font-instrument);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -83,20 +66,25 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* Cincin fokus 3px Sprout + jarak 2px (§18); Mint di latar gelap dan zona foto */
 :focus-visible {
-  outline: 2px solid var(--color-amber);
+  outline: 3px solid var(--color-sprout-300);
   outline-offset: 2px;
 }
+[data-surface="dark"] :focus-visible,
+[data-surface="dark"]:focus-visible {
+  outline-color: var(--color-sprout-100);
+}
 
-/* Range input styled like the notched scale of a command dial */
+/* Slider berskala takik seperti command dial (§8.14). Ibu jari Sprout, takik netral. */
 .dial {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 28px;
+  height: 44px;
   background: repeating-linear-gradient(
       90deg,
-      var(--color-rule) 0 1px,
+      var(--color-tinta-300) 0 1px,
       transparent 1px var(--tick, 12px)
     )
     center / 100% 10px no-repeat;
@@ -104,17 +92,51 @@ body {
 }
 .dial::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 4px;
-  height: 26px;
-  border-radius: 2px;
-  background: var(--color-amber);
+  width: 12px;
+  height: 30px;
+  border-radius: 6px;
+  border: 2px solid var(--color-tinta-900);
+  background: var(--color-sprout-300);
 }
 .dial::-moz-range-thumb {
-  width: 4px;
+  width: 8px;
   height: 26px;
-  border: 0;
-  border-radius: 2px;
-  background: var(--color-amber);
+  border-radius: 6px;
+  border: 2px solid var(--color-tinta-900);
+  background: var(--color-sprout-300);
+}
+.dial:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* Skeleton dengan kilau halus (§8.12) */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-tinta-100) 0%, var(--color-tinta-50) 50%, var(--color-tinta-100) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.toast-in {
+  animation: toast-in 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {

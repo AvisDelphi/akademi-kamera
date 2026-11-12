@@ -4,9 +4,23 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth";
-import { getQuiz, getQuizAttempts, saveQuizAttempt } from "@/lib/lms";
+import { flattenLessons, getCourseOutline, getQuiz, getQuizAttempts, saveQuizAttempt } from "@/lib/lms";
 import { gradeQuiz, isQuizPassed, serializeAnswers } from "@/lib/quiz";
-import { Breadcrumbs, EmptyNote, ErrorNote, Loading, SupabaseNotice } from "./ui";
+import { ArrowRightIcon, CheckIcon, XIcon } from "@/components/icons";
+import {
+  Banner,
+  Breadcrumbs,
+  EmptyNote,
+  ErrorNote,
+  Loading,
+  PageHeader,
+  Pill,
+  ProgressRing,
+  SupabaseNotice,
+  Toast,
+  btn,
+} from "./ui";
+import { useToast } from "./useToast";
 
 const dateFormat = new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeStyle: "short" });
 
@@ -21,16 +35,23 @@ export default function QuizRunner({ courseId, quizId }) {
   const [submitting, setSubmitting] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const [outline, setOutline] = useState([]);
+  const toast = useToast();
 
   useEffect(() => {
     if (!enabled || authLoading) return;
     let active = true;
     setStatus("loading");
     setError(null);
-    Promise.all([getQuiz(quizId), user ? getQuizAttempts(user.id, quizId) : Promise.resolve([])])
-      .then(([quizRow, attemptRows]) => {
+    Promise.all([
+      getQuiz(quizId),
+      user ? getQuizAttempts(user.id, quizId) : Promise.resolve([]),
+      getCourseOutline(courseId).catch(() => []),
+    ])
+      .then(([quizRow, attemptRows, outlineRows]) => {
         if (!active) return;
         setQuiz(quizRow);
+        setOutline(outlineRows);
         setAttempts(attemptRows);
         setStatus("done");
       })
@@ -42,7 +63,7 @@ export default function QuizRunner({ courseId, quizId }) {
     return () => {
       active = false;
     };
-  }, [enabled, authLoading, user, quizId, reloadKey]);
+  }, [enabled, authLoading, user, quizId, courseId, reloadKey]);
 
   const answeredCount = quiz ? Object.keys(answers).length : 0;
   const total = quiz?.questions.length ?? 0;
@@ -59,6 +80,7 @@ export default function QuizRunner({ courseId, quizId }) {
     try {
       await saveQuizAttempt(user.id, quiz.id, graded.score, serializeAnswers(answers));
       setAttempts(await getQuizAttempts(user.id, quiz.id));
+      if (isQuizPassed(graded.score, quiz.pass_score)) toast.show("Kuis lulus 🎉");
     } catch (err) {
       setSaveError(err.message);
     } finally {
@@ -74,29 +96,26 @@ export default function QuizRunner({ courseId, quizId }) {
 
   if (!enabled) {
     return (
-      <div className="py-8">
+      <>
         <Breadcrumbs items={[{ label: "Kursus", href: "/kursus" }, { label: "Kuis" }]} />
-        <h1 className="mt-6 font-display text-4xl font-semibold">Kuis</h1>
-        <p className="mt-2 max-w-prose text-muted">
-          Kerjakan soal pilihan ganda; nilai dan riwayat percobaan tersimpan di akunmu.
-        </p>
-        <div className="mt-8">
-          <SupabaseNotice />
-        </div>
-      </div>
+        <PageHeader title="Kuis" description="Kerjakan soal pilihan ganda; nilai dan riwayat percobaan tersimpan di akunmu." />
+        <SupabaseNotice />
+      </>
     );
   }
   if (authLoading || status === "loading") return <Loading label="Memuat kuis…" />;
   if (status === "error") {
     return (
-      <ErrorNote
-        onRetry={() => {
-          setStatus("loading");
-          setReloadKey((value) => value + 1);
-        }}
-      >
-        Gagal memuat kuis: {error}
-      </ErrorNote>
+      <div className="py-8">
+        <ErrorNote
+          onRetry={() => {
+            setStatus("loading");
+            setReloadKey((value) => value + 1);
+          }}
+        >
+          Kuis gagal dimuat: {error}. Periksa koneksi lalu coba lagi.
+        </ErrorNote>
+      </div>
     );
   }
   if (!quiz) return null;
@@ -104,9 +123,13 @@ export default function QuizRunner({ courseId, quizId }) {
   const lesson = quiz.lessons ?? null;
   const course = lesson?.modules?.courses ?? null;
   const passed = result ? isQuizPassed(result.score, quiz.pass_score) : false;
+  const allLessons = flattenLessons(outline);
+  const lessonIndex = lesson ? allLessons.findIndex((row) => Number(row.id) === Number(lesson.id)) : -1;
+  const nextLesson = lessonIndex >= 0 ? allLessons[lessonIndex + 1] ?? null : null;
 
   return (
-    <div className="py-8">
+    <div className="pb-4">
+      <Toast message={toast.message} onClose={toast.close} />
       <Breadcrumbs
         items={[
           { label: "Kursus", href: "/kursus" },
@@ -116,133 +139,216 @@ export default function QuizRunner({ courseId, quizId }) {
         ]}
       />
 
-      <header className="mt-6 max-w-3xl">
-        <h1 className="font-display text-4xl font-semibold">{quiz.title}</h1>
-        <p className="mt-2 text-muted">
-          {total} soal · nilai lulus minimal {quiz.pass_score}
-          {bestScore !== null && ` · nilai terbaikmu ${bestScore}`}
-        </p>
-      </header>
+      <div className="mx-auto max-w-[760px]">
+        <PageHeader
+          overline="Kuis"
+          title={quiz.title}
+          description={`${total} soal · lulus minimal ${quiz.pass_score}${bestScore !== null ? ` · nilai terbaikmu ${bestScore}` : ""}`}
+        />
 
-      {total === 0 && (
-        <div className="mt-6 max-w-3xl">
-          <EmptyNote>Kuis ini belum memiliki soal.</EmptyNote>
-        </div>
-      )}
+        {!user && !result && (
+          <div className="mb-6">
+            <Banner
+              tone="info"
+              action={
+                <Link href={`/masuk?next=${encodeURIComponent(`/kursus/${courseId}/kuis/${quizId}`)}`} className={btn("secondary", "s")}>
+                  Masuk
+                </Link>
+              }
+            >
+              Kamu belum masuk. Kuis tetap bisa dikerjakan, tetapi nilainya tidak tersimpan.
+            </Banner>
+          </div>
+        )}
 
-      <form onSubmit={handleSubmit} className="mt-8 max-w-3xl space-y-6">
-        <ol className="space-y-6">
-          {quiz.questions.map((question, questionIndex) => (
-            <li key={question.id} className="rounded border border-rule bg-panel p-5">
-              <fieldset>
-                <legend className="font-display text-lg font-semibold">
-                  {questionIndex + 1}. {question.prompt}
-                </legend>
-                <div className="mt-3 space-y-2">
-                  {question.options.map((option) => (
-                    <label key={option.id} className="flex cursor-pointer items-start gap-3 text-sm">
-                      <input
-                        type="radio"
-                        name={`question-${question.id}`}
-                        value={option.id}
-                        checked={Number(answers[question.id]) === Number(option.id)}
-                        onChange={() =>
-                          setAnswers((previous) => ({ ...previous, [question.id]: option.id }))
-                        }
-                        disabled={Boolean(result)}
-                        className="mt-0.5 h-4 w-4 accent-amber"
-                      />
-                      <span>{option.label}</span>
-                    </label>
-                  ))}
+        {total === 0 && <EmptyNote>Kuis ini belum memiliki soal.</EmptyNote>}
+
+        {result && (
+          <section aria-live="polite" aria-label="Hasil kuis" className="mb-8 space-y-4">
+            {passed ? (
+              <Banner tone="success">
+                <p className="font-semibold">Kuis lulus 🎉</p>
+                <p className="mt-1">Pemahamanmu sudah cukup kuat untuk lanjut ke materi berikutnya.</p>
+              </Banner>
+            ) : (
+              <Banner tone="info">
+                <p className="font-semibold">Belum lulus, dan itu wajar.</p>
+                <p className="mt-1">
+                  Baca ulang materinya, lalu coba lagi.{" "}
+                  {lesson && (
+                    <Link href={`/kursus/${courseId}/lesson/${lesson.id}`} className="font-semibold underline">
+                      Buka materi terkait
+                    </Link>
+                  )}
+                </p>
+              </Banner>
+            )}
+
+            <div className="rounded-3xl border border-tinta-100 bg-white p-6 sm:p-8">
+              <div className="flex flex-wrap items-center gap-6">
+                <ProgressRing pct={result.score} size={128} label={`Nilai kuis ${result.score} dari 100`}>
+                  <span>
+                    <span className="block text-[28px] font-bold leading-8 tabular">{result.score}</span>
+                    <span className="block text-xs font-medium text-tinta-500">dari 100</span>
+                  </span>
+                </ProgressRing>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.06em] text-tinta-500">Hasil</p>
+                  <div className="mt-1 flex flex-wrap items-center gap-3">
+                    {passed ? (
+                      <Pill tone="success" Icon={CheckIcon}>
+                        Lulus
+                      </Pill>
+                    ) : (
+                      <Pill tone="warning" Icon={XIcon}>
+                        Belum lulus
+                      </Pill>
+                    )}
+                    <span className="text-sm font-medium text-tinta-500">Lulus minimal {quiz.pass_score}</span>
+                  </div>
+                  <p className="mt-2 text-sm text-tinta-500">
+                    Benar <span className="font-semibold text-tinta-900 tabular">{result.correct}</span> dari{" "}
+                    <span className="tabular">{result.total}</span> soal.
+                    {!user && " Masuk agar nilai dan riwayat kuis tersimpan di akunmu."}
+                  </p>
                 </div>
-              </fieldset>
-            </li>
-          ))}
-        </ol>
+              </div>
 
-        {result ? (
-          <section aria-live="polite" className="rounded border border-rule bg-panel p-5">
-            <p className={`font-display text-2xl font-semibold ${passed ? "text-correct" : "text-over"}`}>
-              {passed ? "Lulus" : "Belum lulus"} · nilai {result.score}
-            </p>
-            <p className="mt-1 text-sm text-muted">
-              Benar {result.correct} dari {result.total} soal.
-              {!user && " Masuk agar nilai dan riwayat kuis tersimpan di akunmu."}
-            </p>
+              <ul className="mt-6 divide-y divide-tinta-100 border-t border-tinta-100">
+                {result.perQuestion.map((row, index) => {
+                  const question = quiz.questions.find((item) => item.id === row.questionId);
+                  return (
+                    <li key={row.questionId} className="flex items-start gap-3 py-3 text-sm">
+                      <span
+                        className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-full ${
+                          row.isCorrect ? "bg-sprout-100 text-sprout-800" : "bg-warn-bg text-warn-fg"
+                        }`}
+                      >
+                        {row.isCorrect ? <CheckIcon size={12} /> : <XIcon size={12} />}
+                      </span>
+                      <span>
+                        <span className="font-semibold">
+                          Soal {index + 1}: {row.isCorrect ? "benar" : "salah"}
+                        </span>
+                        {question ? <span className="text-tinta-500"> — {question.prompt}</span> : null}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
 
-            <ul className="mt-4 space-y-1 text-sm">
-              {result.perQuestion.map((row, index) => {
-                const question = quiz.questions.find((item) => item.id === row.questionId);
-                return (
-                  <li key={row.questionId} className="flex gap-2">
-                    <span className={row.isCorrect ? "text-correct" : "text-over"} aria-hidden="true">
-                      {row.isCorrect ? "✓" : "✗"}
+              {saveError && (
+                <p className="mt-4 text-sm font-medium text-danger-fg" role="alert">
+                  Nilai gagal disimpan: {saveError}
+                </p>
+              )}
+
+              <div className="mt-6 flex flex-wrap gap-3">
+                <button type="button" onClick={retry} className={btn("secondary", "m")}>
+                  Ulangi kuis
+                </button>
+                {nextLesson ? (
+                  <Link href={`/kursus/${courseId}/lesson/${nextLesson.id}`} className={btn("primary", "m")}>
+                    Lanjut ke materi berikutnya <ArrowRightIcon size={16} />
+                  </Link>
+                ) : (
+                  <Link href={`/kursus/${courseId}`} className={btn("primary", "m")}>
+                    Kembali ke kursus
+                  </Link>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+          <ol className="space-y-6">
+            {quiz.questions.map((question, questionIndex) => (
+              <li key={question.id} className="rounded-3xl border border-tinta-100 bg-white p-6">
+                <fieldset disabled={Boolean(result)}>
+                  <legend className="w-full">
+                    <span className="block text-xs font-semibold uppercase tracking-[0.06em] text-tinta-500 tabular">
+                      Pertanyaan {questionIndex + 1} dari {total}
                     </span>
-                    <span>
-                      Soal {index + 1}: {row.isCorrect ? "benar" : "salah"}
-                      {question ? ` — ${question.prompt}` : ""}
+                    <span className="mt-1 block text-base font-semibold leading-[26px]">{question.prompt}</span>
+                  </legend>
+                  <div className="mt-4 space-y-3">
+                    {question.options.map((option) => {
+                      const selected = Number(answers[question.id]) === Number(option.id);
+                      return (
+                        <label
+                          key={option.id}
+                          className={`flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 text-sm transition-colors duration-[120ms] has-[:focus-visible]:outline-[3px] has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-sprout-300 ${
+                            selected
+                              ? "border-sprout-300 bg-sprout-50"
+                              : "border-tinta-100 hover:border-sprout-200 hover:bg-sprout-50"
+                          } ${result ? "cursor-default opacity-80" : ""}`}
+                        >
+                          <input
+                            type="radio"
+                            name={`question-${question.id}`}
+                            value={option.id}
+                            checked={selected}
+                            onChange={() => setAnswers((previous) => ({ ...previous, [question.id]: option.id }))}
+                            className="size-5 shrink-0 accent-sprout-600"
+                          />
+                          <span className="leading-[22px]">{option.label}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </fieldset>
+              </li>
+            ))}
+          </ol>
+
+          {!result && (
+            <div className="flex flex-wrap items-center gap-4">
+              <button
+                type="submit"
+                disabled={submitting || total === 0 || answeredCount < total}
+                className={btn("primary", "l")}
+              >
+                {submitting ? "Mengirim jawaban…" : "Kirim jawaban"}
+              </button>
+              <p className="text-sm font-medium text-tinta-500 tabular" aria-live="polite">
+                {answeredCount} dari {total} soal terjawab
+              </p>
+            </div>
+          )}
+        </form>
+
+        {attempts.length > 0 && (
+          <section aria-labelledby="riwayat-kuis" className="mt-10">
+            <h2 id="riwayat-kuis" className="text-2xl font-bold leading-8">
+              Riwayat percobaan
+            </h2>
+            <ul className="mt-4 divide-y divide-tinta-100 overflow-hidden rounded-3xl border border-tinta-100 bg-white">
+              {attempts.map((attempt) => {
+                const ok = attempt.score >= quiz.pass_score;
+                return (
+                  <li key={attempt.id} className="flex min-h-14 flex-wrap items-center justify-between gap-3 px-5 py-3 text-sm">
+                    <span className="font-medium text-tinta-500">{dateFormat.format(new Date(attempt.created_at))}</span>
+                    <span className="flex items-center gap-3">
+                      {attempt.score === bestScore && <Pill tone="neutral">Terbaik</Pill>}
+                      <span className="font-semibold tabular">{attempt.score}</span>
+                      {ok ? (
+                        <Pill tone="success" Icon={CheckIcon}>
+                          Lulus
+                        </Pill>
+                      ) : (
+                        <Pill tone="warning" Icon={XIcon}>
+                          Belum lulus
+                        </Pill>
+                      )}
                     </span>
                   </li>
                 );
               })}
             </ul>
-
-            {saveError && (
-              <p className="mt-3 text-sm text-over" role="alert">
-                Nilai gagal disimpan: {saveError}
-              </p>
-            )}
-
-            <div className="mt-5 flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={retry}
-                className="rounded-full bg-amber px-5 py-2 font-display font-semibold text-surround"
-              >
-                Coba lagi
-              </button>
-              {lesson && (
-                <Link
-                  href={`/kursus/${courseId}/lesson/${lesson.id}`}
-                  className="rounded-full border border-rule px-5 py-2 font-display font-semibold"
-                >
-                  Kembali ke materi
-                </Link>
-              )}
-            </div>
           </section>
-        ) : (
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              type="submit"
-              disabled={submitting || total === 0 || answeredCount < total}
-              className="rounded-full bg-amber px-6 py-2 font-display text-lg font-semibold text-surround disabled:opacity-60"
-            >
-              {submitting ? "Menyimpan…" : "Kirim jawaban"}
-            </button>
-            <p className="text-sm text-muted" aria-live="polite">
-              {answeredCount}/{total} soal dijawab
-            </p>
-          </div>
         )}
-      </form>
-
-      {attempts.length > 0 && (
-        <section aria-labelledby="riwayat-kuis" className="mt-10 max-w-3xl">
-          <h2 id="riwayat-kuis" className="font-display text-xl font-semibold">
-            Riwayat percobaan
-          </h2>
-          <ul className="mt-3 divide-y divide-rule rounded border border-rule">
-            {attempts.map((attempt) => (
-              <li key={attempt.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-2 text-sm">
-                <span className="tabular">Nilai {attempt.score}</span>
-                <span className="text-muted">{dateFormat.format(new Date(attempt.created_at))}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      </div>
     </div>
   );
 }
