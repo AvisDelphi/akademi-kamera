@@ -11,11 +11,13 @@ import {
   getCourseOutline,
   getLesson,
   getQuizzesForLesson,
-  isLessonComplete,
+  getCompletedLessonIds,
   markLessonComplete,
 } from "@/lib/lms";
 import { getExercise } from "@/lib/exercises";
-import { Breadcrumbs, EmptyNote, ErrorNote, Loading, SupabaseNotice } from "./ui";
+import { ArrowLeftIcon, ArrowRightIcon, CameraIcon, CheckIcon } from "@/components/icons";
+import { Breadcrumbs, EmptyNote, ErrorNote, Loading, PageHeader, Pill, SupabaseNotice, Toast, btn } from "./ui";
+import { useToast } from "./useToast";
 import Markdown from "./Markdown";
 
 export default function LessonView({ courseId, lessonId }) {
@@ -24,12 +26,13 @@ export default function LessonView({ courseId, lessonId }) {
   const [lesson, setLesson] = useState(null);
   const [quizzes, setQuizzes] = useState([]);
   const [outline, setOutline] = useState([]);
-  const [done, setDone] = useState(false);
+  const [completedIds, setCompletedIds] = useState(() => new Set());
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
   const [actionError, setActionError] = useState(null);
   const [attempt, setAttempt] = useState(0);
+  const toast = useToast();
 
   useEffect(() => {
     if (!enabled || authLoading) return;
@@ -39,14 +42,14 @@ export default function LessonView({ courseId, lessonId }) {
     Promise.all([
       getLesson(lessonId),
       getQuizzesForLesson(lessonId),
-      user ? isLessonComplete(user.id, lessonId) : Promise.resolve(false),
+      user ? getCompletedLessonIds(user.id) : Promise.resolve(new Set()),
       getCourseOutline(courseId),
     ])
       .then(([lessonRow, quizRows, completed, outlineRows]) => {
         if (!active) return;
         setLesson(lessonRow);
         setQuizzes(quizRows);
-        setDone(completed);
+        setCompletedIds(completed);
         setOutline(outlineRows);
         setStatus("done");
       })
@@ -67,6 +70,8 @@ export default function LessonView({ courseId, lessonId }) {
   const exercise = lesson?.simulator_exercise_id ? getExercise(lesson.simulator_exercise_id) : null;
   const course = lesson?.modules?.courses ?? null;
   const module = lesson?.modules ?? null;
+  const done = completedIds.has(Number(lessonId));
+  const moduleLessons = outline.find((row) => Number(row.id) === Number(module?.id))?.lessons ?? [];
 
   async function handleComplete() {
     if (!user) {
@@ -80,7 +85,8 @@ export default function LessonView({ courseId, lessonId }) {
       // course appears on the dashboard with the right progress.
       await enroll(user.id, courseId);
       await markLessonComplete(user.id, lessonId);
-      setDone(true);
+      setCompletedIds((previous) => new Set(previous).add(Number(lessonId)));
+      toast.show("Materi ditandai selesai");
     } catch (err) {
       setActionError(err.message);
     } finally {
@@ -90,139 +96,194 @@ export default function LessonView({ courseId, lessonId }) {
 
   if (!enabled) {
     return (
-      <div className="py-8">
+      <>
         <Breadcrumbs items={[{ label: "Kursus", href: "/kursus" }, { label: "Materi" }]} />
-        <h1 className="mt-6 font-display text-4xl font-semibold">Materi</h1>
-        <p className="mt-2 max-w-prose text-muted">
-          Materi kursus, latihan simulator terkait, dan kuis untuk menguji pemahaman.
-        </p>
-        <div className="mt-8">
-          <SupabaseNotice />
-        </div>
-      </div>
+        <PageHeader title="Materi" description="Materi kursus, latihan simulator terkait, dan kuis untuk menguji pemahaman." />
+        <SupabaseNotice />
+      </>
     );
   }
   if (authLoading || status === "loading") return <Loading label="Memuat materi…" />;
   if (status === "error") {
     return (
-      <ErrorNote
-        onRetry={() => {
-          setStatus("loading");
-          setAttempt((value) => value + 1);
-        }}
-      >
-        Gagal memuat materi: {error}
-      </ErrorNote>
+      <div className="py-8">
+        <ErrorNote
+          onRetry={() => {
+            setStatus("loading");
+            setAttempt((value) => value + 1);
+          }}
+        >
+          Materi gagal dimuat: {error}. Periksa koneksi lalu coba lagi.
+        </ErrorNote>
+      </div>
     );
   }
   if (!lesson) return null;
 
+  const lessonPath = `/kursus/${courseId}/lesson/${lessonId}`;
+  const firstQuiz = quizzes[0] ?? null;
+
   return (
-    <div className="py-8">
+    <div className="pb-4">
+      <Toast message={toast.message} onClose={toast.close} />
       <Breadcrumbs
         items={[
           { label: "Kursus", href: "/kursus" },
           { label: course?.title ?? "Kursus", href: `/kursus/${courseId}` },
-          { label: module?.title ?? "Modul" },
           { label: lesson.title },
         ]}
       />
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
-        <article className="min-w-0">
-          <h1 className="font-display text-4xl font-semibold">{lesson.title}</h1>
+        <article className="min-w-0 rounded-3xl border border-tinta-100 bg-white p-6 sm:p-10">
+          <p className="text-xs font-semibold uppercase tracking-[0.06em] text-sprout-700">
+            {module?.title ?? "Modul"}
+          </p>
+          <h1 className="mt-2 text-[32px] font-bold leading-10">{lesson.title}</h1>
           <div className="mt-6">
-            {lesson.content_md?.trim() ? <Markdown text={lesson.content_md} /> : <EmptyNote>Materi ini belum diisi.</EmptyNote>}
-          </div>
-
-          <div className="mt-8 flex flex-wrap items-center gap-3 border-t border-rule pt-6">
-            {done ? (
-              <p className="font-display text-correct">✓ Materi ini sudah ditandai selesai.</p>
+            {lesson.content_md?.trim() ? (
+              <Markdown text={lesson.content_md} />
             ) : (
-              <button
-                type="button"
-                onClick={handleComplete}
-                disabled={saving}
-                className="rounded-full bg-amber px-5 py-2 font-display font-semibold text-surround disabled:opacity-60"
-              >
-                {saving ? "Menyimpan…" : user ? "Tandai selesai" : "Masuk untuk menandai selesai"}
-              </button>
+              <EmptyNote>Materi ini belum diisi.</EmptyNote>
             )}
-            <Link href={`/kursus/${courseId}`} className="text-sm text-muted underline">
-              Kembali ke daftar materi
-            </Link>
           </div>
-          {actionError && (
-            <p className="mt-3 text-sm text-over" role="alert">
-              {actionError}
-            </p>
-          )}
 
-          {(previous || next) && (
-            <nav aria-label="Materi sebelumnya dan berikutnya" className="mt-8 grid gap-3 sm:grid-cols-2">
-              {previous ? (
-                <Link
-                  href={`/kursus/${courseId}/lesson/${previous.id}`}
-                  className="rounded border border-rule p-4 hover:border-amber"
-                >
-                  <span className="text-xs text-muted">Sebelumnya</span>
-                  <span className="mt-1 block font-display font-semibold">{previous.title}</span>
-                </Link>
-              ) : (
-                <span />
-              )}
-              {next && (
-                <Link
-                  href={`/kursus/${courseId}/lesson/${next.id}`}
-                  className="rounded border border-rule p-4 text-right hover:border-amber"
-                >
-                  <span className="text-xs text-muted">Berikutnya</span>
-                  <span className="mt-1 block font-display font-semibold">{next.title}</span>
-                </Link>
-              )}
-            </nav>
-          )}
-        </article>
-
-        <aside className="space-y-4">
+          {/* Kartu sorotan: latihan simulator yang terhubung */}
           {exercise && (
-            <div className="rounded border border-rule bg-panel p-5">
-              <h2 className="font-display text-lg font-semibold">Latihan simulator</h2>
-              <p className="mt-1 text-sm text-muted">{exercise.title}</p>
-              <p className="mt-2 text-sm text-muted">{exercise.brief}</p>
+            <div data-surface="dark" className="mt-10 flex flex-col gap-4 rounded-3xl bg-tinta-900 p-6 text-white sm:p-8">
+              <div className="flex items-center gap-3">
+                <span className="grid size-11 place-items-center rounded-xl bg-tinta-800 text-sprout-300">
+                  <CameraIcon size={24} />
+                </span>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.06em] text-sprout-300">Coba di simulator</p>
+                  <h2 className="text-lg font-semibold leading-7">Latihan: {exercise.title}</h2>
+                </div>
+              </div>
+              <p className="max-w-xl text-sm leading-[22px] text-tinta-300">{exercise.brief}</p>
               <Link
                 href={`/simulator?latihan=${encodeURIComponent(exercise.id)}`}
-                className="mt-4 inline-block rounded-full bg-amber px-4 py-1.5 font-display font-semibold text-surround"
+                className={`${btn("primary", "m")} self-start`}
               >
                 Buka latihan
               </Link>
             </div>
           )}
 
+          {/* Navigasi materi (§8.7) */}
+          <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-tinta-100 pt-6">
+            {previous ? (
+              <Link href={`/kursus/${courseId}/lesson/${previous.id}`} className={btn("ghost", "m")}>
+                <ArrowLeftIcon size={16} /> Sebelumnya
+              </Link>
+            ) : (
+              <Link href={`/kursus/${courseId}`} className={btn("ghost", "m")}>
+                <ArrowLeftIcon size={16} /> Daftar isi
+              </Link>
+            )}
+
+            <div className="flex flex-wrap items-center gap-3">
+              {done && (
+                <Pill tone="success" Icon={CheckIcon}>
+                  Selesai
+                </Pill>
+              )}
+              {!user ? (
+                <Link href={`/masuk?next=${encodeURIComponent(lessonPath)}`} className={btn("primary", "m")}>
+                  Masuk untuk menyimpan progres
+                </Link>
+              ) : firstQuiz ? (
+                <>
+                  {!done && (
+                    <button type="button" onClick={handleComplete} disabled={saving} className={btn("secondary", "m")}>
+                      {saving ? "Menyimpan…" : "Tandai selesai"}
+                    </button>
+                  )}
+                  <Link href={`/kursus/${courseId}/kuis/${firstQuiz.id}`} className={btn("primary", "m")}>
+                    Kerjakan kuis <ArrowRightIcon size={16} />
+                  </Link>
+                </>
+              ) : done ? (
+                next ? (
+                  <Link href={`/kursus/${courseId}/lesson/${next.id}`} className={btn("primary", "m")}>
+                    Materi berikutnya <ArrowRightIcon size={16} />
+                  </Link>
+                ) : (
+                  <Link href={`/kursus/${courseId}`} className={btn("primary", "m")}>
+                    Kembali ke kursus
+                  </Link>
+                )
+              ) : (
+                <button type="button" onClick={handleComplete} disabled={saving} className={btn("primary", "m")}>
+                  {saving ? "Menyimpan…" : "Tandai selesai"}
+                  {!saving && <ArrowRightIcon size={16} />}
+                </button>
+              )}
+            </div>
+          </div>
+          {actionError && (
+            <p className="mt-3 text-sm font-medium text-danger-fg" role="alert">
+              {actionError}
+            </p>
+          )}
+        </article>
+
+        <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+          <nav aria-label="Daftar materi modul" className="rounded-3xl border border-tinta-100 bg-white p-5">
+            <h2 className="px-1 text-base font-semibold leading-6">Daftar materi</h2>
+            <p className="px-1 text-xs font-medium text-tinta-500">{module?.title}</p>
+            <ul className="mt-3 space-y-1">
+              {moduleLessons.map((row) => {
+                const isCurrent = Number(row.id) === Number(lessonId);
+                const isDone = completedIds.has(Number(row.id));
+                return (
+                  <li key={row.id}>
+                    <Link
+                      href={`/kursus/${courseId}/lesson/${row.id}`}
+                      aria-current={isCurrent ? "page" : undefined}
+                      className={`flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-sm transition-colors duration-[120ms] ${
+                        isCurrent ? "bg-sprout-50 font-semibold" : "hover:bg-tinta-50"
+                      }`}
+                    >
+                      <span
+                        role="img"
+                        aria-label={isDone ? "Selesai" : isCurrent ? "Sedang dibuka" : "Belum selesai"}
+                        className={`grid size-5 shrink-0 place-items-center rounded-full ${
+                          isDone
+                            ? "bg-sprout-300 text-tinta-900"
+                            : isCurrent
+                              ? "border-2 border-sprout-300 bg-white"
+                              : "border-2 border-tinta-200 bg-white"
+                        }`}
+                      >
+                        {isDone && <CheckIcon size={12} />}
+                      </span>
+                      <span className="min-w-0 flex-1">{row.title}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
           {quizzes.length > 0 && (
-            <div className="rounded border border-rule bg-panel p-5">
-              <h2 className="font-display text-lg font-semibold">Uji pemahaman</h2>
-              <ul className="mt-3 space-y-3">
+            <div className="rounded-3xl border border-tinta-100 bg-white p-5">
+              <h2 className="px-1 text-base font-semibold leading-6">Uji pemahaman</h2>
+              <ul className="mt-3 space-y-2">
                 {quizzes.map((quiz) => (
                   <li key={quiz.id}>
                     <Link
                       href={`/kursus/${courseId}/kuis/${quiz.id}`}
-                      className="block rounded border border-rule p-3 hover:border-amber"
+                      className="block rounded-2xl border border-tinta-100 p-4 transition duration-200 hover:border-sprout-200 hover:bg-sprout-50"
                     >
-                      <span className="block font-semibold">{quiz.title}</span>
-                      <span className="mt-1 block text-xs text-muted">
-                        {quiz.questionCount} soal · lulus ≥ {quiz.pass_score}
+                      <span className="block text-sm font-semibold">{quiz.title}</span>
+                      <span className="mt-1 block text-xs font-medium text-tinta-500">
+                        {quiz.questionCount} soal · lulus minimal {quiz.pass_score}
                       </span>
                     </Link>
                   </li>
                 ))}
               </ul>
-            </div>
-          )}
-
-          {!exercise && quizzes.length === 0 && (
-            <div className="rounded border border-dashed border-rule p-5 text-sm text-muted">
-              Materi ini belum memiliki latihan atau kuis.
             </div>
           )}
         </aside>
