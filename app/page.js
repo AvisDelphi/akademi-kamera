@@ -1,9 +1,10 @@
-// app/page.js — landing page (UIUX_GUIDELINE §14.1). Sengaja tanpa navbar aplikasi:
-// halaman ini hanya memperkenalkan produk. Alur: hero → mengapa → fitur → FAQ → CTA → footer.
+// app/page.js — landing page (UIUX_GUIDELINE §14.1). Memakai navbar landing sendiri (LandingNav):
+// navigasi antar-section dan Masuk/Daftar, bukan navbar aplikasi. Alur: hero → mengapa → fitur → FAQ → CTA → footer.
 import Link from "next/link";
 import ClosingCta from "@/components/landing/ClosingCta";
 import FaqList from "@/components/landing/FaqList";
 import HeroIllustration from "@/components/landing/HeroIllustration";
+import LandingNav from "@/components/landing/LandingNav";
 import {
   ApertureIcon,
   ArrowRightIcon,
@@ -109,16 +110,12 @@ const container = "mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8";
 export default function Home() {
   return (
     <div className="font-instrument text-tinta-900">
+      <LandingNav />
+
       {/* Hero */}
       <section aria-labelledby="judul-beranda" className={`${container} grid items-center gap-12 py-12 sm:py-20 lg:grid-cols-12`}>
         <div className="lg:col-span-7">
-          <p className="flex items-center gap-3 text-sm font-semibold">
-            <span className="grid size-9 place-items-center rounded-xl bg-tinta-900 text-sprout-300">
-              <ApertureIcon size={20} />
-            </span>
-            Akademi Kamera
-          </p>
-          <p className="mt-8 text-xs font-semibold uppercase tracking-[0.06em] text-sprout-700">
+          <p className="text-xs font-semibold uppercase tracking-[0.06em] text-sprout-700">
             LMS fotografi · segitiga exposure
           </p>
           <h1
@@ -170,7 +167,7 @@ export default function Home() {
       </section>
 
       {/* Mengapa Akademi Kamera */}
-      <section aria-labelledby="judul-mengapa" className={`${container} py-16 sm:py-24`}>
+      <section id="mengapa" aria-labelledby="judul-mengapa" className={`${container} scroll-mt-16 py-16 sm:py-24`}>
         <p className="text-xs font-semibold uppercase tracking-[0.06em] text-sprout-700">Mengapa Akademi Kamera</p>
         <h2 id="judul-mengapa" className="mt-2 max-w-2xl text-2xl font-bold leading-8 sm:text-[32px] sm:leading-10">
           Dirancang agar kamu paham alasannya, bukan hanya angkanya
@@ -191,7 +188,7 @@ export default function Home() {
       </section>
 
       {/* Fitur unggulan */}
-      <section aria-labelledby="judul-fitur" className="bg-sprout-50 py-16 sm:py-24">
+      <section id="fitur" aria-labelledby="judul-fitur" className="scroll-mt-16 bg-sprout-50 py-16 sm:py-24">
         <div className={container}>
           <p className="text-xs font-semibold uppercase tracking-[0.06em] text-sprout-700">Fitur unggulan</p>
           <h2 id="judul-fitur" className="mt-2 max-w-2xl text-2xl font-bold leading-8 sm:text-[32px] sm:leading-10">
@@ -232,7 +229,7 @@ export default function Home() {
       </section>
 
       {/* FAQ */}
-      <section aria-labelledby="judul-faq" className={`${container} grid gap-10 py-16 sm:py-24 lg:grid-cols-12`}>
+      <section id="faq" aria-labelledby="judul-faq" className={`${container} grid scroll-mt-16 gap-10 py-16 sm:py-24 lg:grid-cols-12`}>
         <div className="lg:col-span-4">
           <p className="text-xs font-semibold uppercase tracking-[0.06em] text-sprout-700">FAQ</p>
           <h2 id="judul-faq" className="mt-2 text-2xl font-bold leading-8 sm:text-[32px] sm:leading-10">
@@ -272,6 +269,7 @@ export default function Home() {
               <li><Link href="/kursus" className="hover:text-sprout-700 hover:underline">Kursus</Link></li>
               <li><Link href="/simulator" className="hover:text-sprout-700 hover:underline">Simulator kamera</Link></li>
               <li><Link href="/analisis" className="hover:text-sprout-700 hover:underline">Analisis foto</Link></li>
+              <li><a href="#faq" className="hover:text-sprout-700 hover:underline">FAQ</a></li>
             </ul>
           </nav>
           <nav aria-label="Akun" className="md:col-span-3">
