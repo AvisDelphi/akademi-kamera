@@ -171,10 +171,12 @@ Tujuan: menutup celah kunci jawaban dan memberi peran admin antarmukanya.
 
 **Panel admin (G1, G6)**
 
-- [ ] Komponen penjaga peran `components/auth/RequireRole.js` (menampilkan "akses ditolak" jika peran tidak sesuai).
-- [ ] Halaman `app/admin/pengguna/page.js` + `components/admin/UserManager.js`: daftar pengguna, cari nama, ubah peran. RLS `admin manages profiles` sudah ada, jadi tidak perlu fungsi server baru.
-- [ ] Email pengguna tidak tersedia di `profiles`. Pilihan paling sederhana: tambahkan kolom `email` yang diisi oleh trigger `handle_new_user` (migrasi baru) agar admin bisa mengenali akun.
-- [ ] Tautan "Admin" di `components/SiteHeader.js` hanya untuk peran admin.
+- [x] Komponen penjaga peran `components/auth/RequireRole.js` (menampilkan "akses ditolak" jika peran tidak sesuai).
+- [x] Halaman `app/(staff)/admin/pengguna/page.js` + `components/admin/UserManager.js`: daftar pengguna, cari nama atau email, filter peran, ubah peran lewat modal konfirmasi. RLS `admin manages profiles` sudah ada, jadi tidak perlu fungsi server baru.
+- [x] Email pengguna tidak tersedia di `profiles` (migrasi `20261112000200_profiles_email.sql`: kolom `email`, backfill, trigger, dan batasan kolom yang boleh diubah). Pilihan paling sederhana: tambahkan kolom `email` yang diisi oleh trigger `handle_new_user` (migrasi baru) agar admin bisa mengenali akun.
+- [x] Tautan "Admin" di `components/SiteHeader.js` (menu akun) hanya untuk peran admin; sidebar punya bagian ADMIN yang juga hanya untuk admin.
+
+> Status 12 November 2026: panel admin selesai dan diuji dengan Supabase tiruan serta Postgres lokal untuk migrasinya; belum diuji di Supabase sungguhan. Penilaian kuis di server (G4) belum dikerjakan.
 
 **Definition of Done:** siswa tidak bisa membaca `is_correct` lewat konsol browser, nilai hanya tercatat lewat RPC, admin dapat menaikkan siswa menjadi instruktur dari UI.
 

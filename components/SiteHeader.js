@@ -14,6 +14,7 @@ import {
   LogoutIcon,
   PhotoSearchIcon,
   PresentationIcon,
+  ShieldIcon,
   UserIcon,
 } from "@/components/icons";
 
@@ -86,6 +87,11 @@ function AccountMenu({ user, displayName, role, onSignOut }) {
             {(role === "instructor" || role === "admin") && (
               <Link href="/instruktur" role="menuitem" onClick={() => setOpen(false)} className={menuItem}>
                 <PresentationIcon size={20} /> Area Instruktur
+              </Link>
+            )}
+            {role === "admin" && (
+              <Link href="/admin/pengguna" role="menuitem" onClick={() => setOpen(false)} className={menuItem}>
+                <ShieldIcon size={20} /> Admin
               </Link>
             )}
             <Link href="/profil" role="menuitem" onClick={() => setOpen(false)} className={menuItem}>

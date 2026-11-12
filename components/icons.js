@@ -304,3 +304,12 @@ export function PencilIcon(props) {
     </Icon>
   );
 }
+
+export function ShieldIcon(props) {
+  return (
+    <Icon {...props}>
+      <path d="M12 3.5 5 6v5.500c0 4.2 2.8 7.5 7 9 4.2-1.5 7-4.8 7-9V6l-7-2.500Z" />
+      <path d="m9 12 2.2 2.200L15.2 10" />
+    </Icon>
+  );
+}

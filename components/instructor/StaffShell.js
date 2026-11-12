@@ -12,10 +12,12 @@ import {
   BookIcon,
   MenuIcon,
   PresentationIcon,
+  ShieldIcon,
   UsersIcon,
   XIcon,
 } from "@/components/icons";
-import { AuthPrompt, Loading, SupabaseNotice, btn } from "@/components/lms/ui";
+import { AccessDenied } from "@/components/auth/RequireRole";
+import { AuthPrompt, Loading, SupabaseNotice } from "@/components/lms/ui";
 
 const NAV = [
   { href: "/instruktur", label: "Ringkasan", Icon: PresentationIcon, exact: true },
@@ -28,39 +30,55 @@ function initials(name) {
   return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "?";
 }
 
-function NavList({ pathname, compact, onNavigate }) {
+const ADMIN_NAV = [{ href: "/admin/pengguna", label: "Pengguna & peran", Icon: ShieldIcon }];
+
+function NavItems({ items, pathname, compact, onNavigate }) {
+  return (
+    <ul className="space-y-1">
+      {items.map(({ href, label, Icon, exact }) => {
+        const active = exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
+        return (
+          <li key={href}>
+            <Link
+              href={href}
+              title={label}
+              onClick={onNavigate}
+              aria-current={active ? "page" : undefined}
+              className={`relative flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-semibold transition-colors duration-[120ms] ${
+                active ? "bg-tinta-700 text-white" : "text-tinta-300 hover:bg-tinta-700/50"
+              } ${compact ? "md:justify-center lg:justify-start" : ""}`}
+            >
+              {active && <span aria-hidden="true" className="absolute inset-y-2 left-0 w-[3px] rounded-full bg-sprout-300" />}
+              <Icon size={20} className={active ? "text-sprout-300" : undefined} />
+              <span className={compact ? "md:hidden lg:inline" : ""}>{label}</span>
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function NavList({ pathname, compact, onNavigate, role }) {
   return (
     <nav aria-label="Navigasi Area Instruktur" className="flex-1 px-3">
       <p className={`px-3 pb-2 pt-4 text-xs font-semibold uppercase tracking-[0.06em] text-tinta-300 ${compact ? "md:hidden lg:block" : ""}`}>
         Mengajar
       </p>
-      <ul className="space-y-1">
-        {NAV.map(({ href, label, Icon, exact }) => {
-          const active = exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
-          return (
-            <li key={href}>
-              <Link
-                href={href}
-                title={label}
-                onClick={onNavigate}
-                aria-current={active ? "page" : undefined}
-                className={`relative flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-semibold transition-colors duration-[120ms] ${
-                  active ? "bg-tinta-700 text-white" : "text-tinta-300 hover:bg-tinta-700/50"
-                } ${compact ? "md:justify-center lg:justify-start" : ""}`}
-              >
-                {active && <span aria-hidden="true" className="absolute inset-y-2 left-0 w-[3px] rounded-full bg-sprout-300" />}
-                <Icon size={20} className={active ? "text-sprout-300" : undefined} />
-                <span className={compact ? "md:hidden lg:inline" : ""}>{label}</span>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+      <NavItems items={NAV} pathname={pathname} compact={compact} onNavigate={onNavigate} />
+      {role === "admin" && (
+        <>
+          <p className={`px-3 pb-2 pt-6 text-xs font-semibold uppercase tracking-[0.06em] text-tinta-300 ${compact ? "md:hidden lg:block" : ""}`}>
+            Admin
+          </p>
+          <NavItems items={ADMIN_NAV} pathname={pathname} compact={compact} onNavigate={onNavigate} />
+        </>
+      )}
     </nav>
   );
 }
 
-function Sidebar({ pathname, displayName, compact, onNavigate }) {
+function Sidebar({ pathname, displayName, role, compact, onNavigate }) {
   return (
     <div data-surface="dark" className="flex h-full flex-col bg-tinta-900 py-4 text-white">
       <Link
@@ -74,7 +92,7 @@ function Sidebar({ pathname, displayName, compact, onNavigate }) {
         <span className={compact ? "md:hidden lg:inline" : ""}>Akademi Kamera</span>
       </Link>
 
-      <NavList pathname={pathname} compact={compact} onNavigate={onNavigate} />
+      <NavList pathname={pathname} compact={compact} onNavigate={onNavigate} role={role} />
 
       <div className="mx-3 border-t border-tinta-700 pt-3">
         <Link
@@ -97,26 +115,10 @@ function Sidebar({ pathname, displayName, compact, onNavigate }) {
   );
 }
 
-function AccessDenied() {
-  return (
-    <section role="alert" className="mx-auto flex max-w-lg flex-col items-center py-16 text-center">
-      <span className="grid size-16 place-items-center rounded-3xl bg-warn-bg text-warn-fg">
-        <ApertureIcon size={32} />
-      </span>
-      <h1 className="mt-6 text-[32px] font-bold leading-10">Akses ditolak</h1>
-      <p className="mt-3 text-base leading-[26px] text-tinta-500">
-        Area ini khusus instruktur dan admin. Akunmu berperan siswa. Peran instruktur diberikan oleh admin.
-      </p>
-      <Link href="/dasbor" className={`${btn("primary", "l")} mt-8`}>
-        Kembali ke dasbor
-      </Link>
-    </section>
-  );
-}
-
 export default function StaffShell({ children }) {
   const pathname = usePathname();
   const { enabled, loading, user, role, displayName } = useAuth();
+  const areaTitle = pathname.startsWith("/admin") ? "Admin" : "Area Instruktur";
   const [drawer, setDrawer] = useState(false);
 
   useEffect(() => setDrawer(false), [pathname]);
@@ -131,14 +133,15 @@ export default function StaffShell({ children }) {
   if (!enabled) body = <div className="py-8"><SupabaseNotice /></div>;
   else if (loading || (user && !role)) body = <Loading label="Memeriksa akses…" />;
   else if (!user) body = <AuthPrompt next={pathname} message="Masuk dengan akun instruktur untuk membuka Area Instruktur." />;
-  else if (role !== "instructor" && role !== "admin") body = <AccessDenied />;
+  else if (role !== "instructor" && role !== "admin")
+    body = <AccessDenied message="Area ini khusus instruktur dan admin. Akunmu berperan siswa. Peran instruktur diberikan oleh admin." />;
   else body = children;
 
   return (
     <div className="font-instrument text-tinta-900 md:flex">
       {/* Sidebar tablet/desktop */}
       <aside className="sticky top-0 hidden h-screen shrink-0 md:block md:w-[72px] lg:w-[264px]">
-        <Sidebar pathname={pathname} displayName={displayName} compact />
+        <Sidebar pathname={pathname} displayName={displayName} role={role} compact />
       </aside>
 
       {/* Bar atas + drawer mobile */}
@@ -152,13 +155,13 @@ export default function StaffShell({ children }) {
         >
           <MenuIcon size={24} />
         </button>
-        <span className="text-base font-semibold">Area Instruktur</span>
+        <span className="text-base font-semibold">{areaTitle}</span>
       </div>
       {drawer && (
         <div className="fixed inset-0 z-40 md:hidden">
           <button type="button" aria-label="Tutup menu" onClick={() => setDrawer(false)} className="absolute inset-0 bg-tinta-950/60 backdrop-blur-sm" />
           <div className="absolute inset-y-0 left-0 w-[280px] shadow-e3">
-            <Sidebar pathname={pathname} displayName={displayName} onNavigate={() => setDrawer(false)} />
+            <Sidebar pathname={pathname} displayName={displayName} role={role} onNavigate={() => setDrawer(false)} />
             <button
               type="button"
               onClick={() => setDrawer(false)}
